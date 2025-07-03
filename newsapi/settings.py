@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'news',
+    
+    'rest_framework.authtoken',  # needed for token login
+    'djoser',
+    
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
@@ -88,7 +93,7 @@ DATABASES = {
     }
 }
 
-
+AUTH_USER_MODEL = 'news.CustomUser'
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -133,3 +138,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+
+# Auth config
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+DJOSER = {
+    "USER_ID_FIELD": "id",
+    "LOGIN_FIELD": "email",
+    "SERIALIZERS": {
+        "user_create": "news.serializers.CustomUserCreateSerializer",
+        "user": "news.serializers.CustomUserSerializer",
+        "current_user": "news.serializers.CustomUserSerializer",
+    },
+}

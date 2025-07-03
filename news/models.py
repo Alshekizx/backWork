@@ -1,6 +1,38 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from multiselectfield import MultiSelectField
 import uuid
 
+MAIN_CATEGORIES = [
+    ("World-News", "World-News"),
+    ("Local-News", "Local-News"),
+    ("Sport", "Sport"),
+    ("Technology", "Technology"),
+    ("Entertainment", "Entertainment"),
+    ("Scientific", "Scientific"),
+    ("Business", "Business"),
+    ("Politics", "Politics"),
+]
+
+class CustomUser(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    
+    full_name = models.CharField(max_length=255, blank=True)
+    email = models.EmailField(unique=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    subscribe_newsletter = models.BooleanField(default=False)
+    notification_preferences = MultiSelectField(choices=MAIN_CATEGORIES, blank=True)
+    post_read_history = models.ManyToManyField("NewsPost", blank=True, related_name="read_by_users")
+    comment_history = models.ManyToManyField("Comment", blank=True, related_name="commented_by_users")
+    profile_picture = models.URLField(blank=True, null=True)
+    time_joined = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username or self.full_name or "Anonymous User"
+
+
+    
 class Source(models.Model):
     name = models.CharField(max_length=255)
     website = models.URLField()
@@ -49,3 +81,4 @@ class NewsPost(models.Model):
 
     def __str__(self):
         return self.header
+
