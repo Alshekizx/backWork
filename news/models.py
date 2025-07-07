@@ -2,17 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
 import uuid
-
-MAIN_CATEGORIES = [
-    ("World-News", "World-News"),
-    ("Local-News", "Local-News"),
-    ("Sport", "Sport"),
-    ("Technology", "Technology"),
-    ("Entertainment", "Entertainment"),
-    ("Scientific", "Scientific"),
-    ("Business", "Business"),
-    ("Politics", "Politics"),
-]
+from .constants import MAIN_CATEGORIES
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
@@ -51,18 +41,6 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.name} - {self.comment[:30]}..."
 
-# Define category choices
-MAIN_CATEGORIES = [
-    ("World-News", "World-News"),
-    ("Local-News", "Local-News"),
-    ("Sport", "Sport"),
-    ("Technology", "Technology"),
-    ("Entertainment", "Entertainment"),
-    ("Scientific", "Scientific"),
-    ("Business", "Business"),
-    ("Politics", "Politics"),
-]
-
 class NewsPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.URLField()
@@ -74,10 +52,14 @@ class NewsPost(models.Model):
     comments = models.ManyToManyField(Comment, blank=True, related_name='news_posts')
     views = models.PositiveIntegerField(default=0)
     share_link = models.URLField()
-    
-    # Add structured categories
     main_category = models.CharField(max_length=50, choices=MAIN_CATEGORIES)
     sub_category = models.CharField(max_length=100, blank=True)
+    
+    is_top_news = models.BooleanField(default=False)
+    top_news_priority = models.PositiveSmallIntegerField(
+        null=True, blank=True, unique=True,
+        help_text="Priority from 1 (highest) to 20 (lowest) for top news."
+    )
 
     def __str__(self):
         return self.header

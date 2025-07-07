@@ -2,13 +2,7 @@ from rest_framework import serializers
 from .models import NewsPost, Comment, CustomUser
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
-
-# Your category choices for validation
-MAIN_CATEGORIES = [
-    "World-News", "Local-News", "Sport",
-    "Technology", "Entertainment", "Scientific",
-    "Business", "Politics",
-]
+from .constants import MAIN_CATEGORIES
 
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
     # Explicitly define notification_preferences to accept list from JSON
