@@ -27,8 +27,9 @@ SECRET_KEY = 'django-insecure-l39%9vhz72q-*%6^ezr*_@932*)4-x&i+0sf1k#@x^&ee)*yzw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['naijatalkbackend.onrender.com']
-
+ALLOWED_HOSTS = [
+    "naijatalkbackend.onrender.com",
+]
 
 # Application definition
 
@@ -153,3 +154,7 @@ DJOSER = {
         "current_user": "news.serializers.CustomUserSerializer",
     },
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://naijatalkbackend.onrender.com",
+]
