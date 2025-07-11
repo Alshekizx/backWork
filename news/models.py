@@ -61,6 +61,12 @@ class NewsPost(models.Model):
         help_text="Priority from 1 (highest) to 20 (lowest) for top news."
     )
     
+    # ✅ Trending News Fields
+    is_trending = models.BooleanField(default=False)
+    trending_priority = models.PositiveSmallIntegerField(
+        null=True, blank=True, unique=True,
+        help_text="Priority from 1 (highest) to 30 (lowest) for trending news."
+    )
     # ✅ New Field
     is_posted = models.BooleanField(default=False, help_text="Mark as posted or unposted.")
 
