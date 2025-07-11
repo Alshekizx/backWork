@@ -60,6 +60,9 @@ class NewsPost(models.Model):
         null=True, blank=True, unique=True,
         help_text="Priority from 1 (highest) to 20 (lowest) for top news."
     )
+    
+    # ✅ New Field
+    is_posted = models.BooleanField(default=False, help_text="Mark as posted or unposted.")
 
     def __str__(self):
         return self.header
