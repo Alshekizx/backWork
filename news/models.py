@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
 import uuid
 from .constants import MAIN_CATEGORIES
+from django.utils import timezone 
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
@@ -16,7 +17,7 @@ class CustomUser(AbstractUser):
     post_read_history = models.ManyToManyField("NewsPost", blank=True, related_name="read_by_users")
     comment_history = models.ManyToManyField("Comment", blank=True, related_name="commented_by_users")
     profile_picture = models.URLField(blank=True, null=True)
-    time_joined = models.DateTimeField(auto_now_add=True)
+    time_joined = models.DateTimeField(auto_now_add=True, default=timezone.now)
 
     def __str__(self):
         return self.username or self.full_name or "Anonymous User"
