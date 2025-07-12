@@ -17,8 +17,8 @@ class CustomUser(AbstractUser):
     post_read_history = models.ManyToManyField("NewsPost", blank=True, related_name="read_by_users")
     comment_history = models.ManyToManyField("Comment", blank=True, related_name="commented_by_users")
     profile_picture = models.URLField(blank=True, null=True)
-    time_joined = models.DateTimeField(auto_now_add=True, default=timezone.now)
-
+    time_joined = models.DateTimeField(default=timezone.now)
+    
     def __str__(self):
         return self.username or self.full_name or "Anonymous User"
 
