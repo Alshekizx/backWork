@@ -1,12 +1,19 @@
-# File: backend/news/urls.py
 from django.urls import path
-from .views import NewsPostListView, NewsPostDetailView
-from . import views
+from .views import (
+    NewsPostListView,
+    NewsPostDetailView,
+    set_top_news,
+    list_top_news,
+    set_trending_news,
+    list_trending_news,
+)
 
 urlpatterns = [
     path('news/', NewsPostListView.as_view(), name='news-list'),
     path('news/<uuid:id>/', NewsPostDetailView.as_view(), name='news-detail'),
-     path('top-news/set/', views.set_top_news),
-    path('top-news/', views.list_top_news),
-    
+    path('top-news/set/', set_top_news),
+    path('top-news/', list_top_news),
+
+    path('trending-news/set/', set_trending_news),
+    path('trending-news/', list_trending_news),
 ]
