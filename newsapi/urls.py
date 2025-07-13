@@ -30,7 +30,6 @@ urlpatterns = [
      # Auth endpoints
     path("auth/token/login/", CustomTokenLoginView.as_view(), name="custom_token_login"),
     path('auth/', include('djoser.urls')),
-     path('api/news/', NewsPostListView.as_view(), name='news-list'),
     path('auth/', include('djoser.urls.authtoken')),
     
 ]

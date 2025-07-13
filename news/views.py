@@ -10,11 +10,12 @@ from django.shortcuts import get_object_or_404
 from django.db import transaction
 
 # ✅ List all posts, with optional search, category, date filtering
-class NewsPostListView(generics.ListAPIView):
+class NewsPostListView(generics.ListCreateAPIView):
     serializer_class = NewsPostSerializer
+    queryset = NewsPost.objects.all().order_by("-date", "-time")
 
     def get_queryset(self):
-        queryset = NewsPost.objects.all().order_by("-date", "-time")
+        queryset = super().get_queryset()
 
         category = self.request.query_params.get("category")
         date = self.request.query_params.get("date")
@@ -115,13 +116,7 @@ def auto_assign_top_news(news_post):
         available_priorities = [20]
 
     assign_top_news(news_post, min(available_priorities))
-
-# ✅ Supports GET (retrieve), PUT/PATCH (update), and DELETE
-class NewsPostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = NewsPost.objects.all()
-    serializer_class = NewsPostSerializer
-    lookup_field = 'id'  # This assumes you're using `id` (UUID or pk)
-    
+ 
     
 @transaction.atomic
 def assign_trending_news(news_post, priority):
