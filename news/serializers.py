@@ -41,8 +41,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class NewsPostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
-    shareLink = serializers.URLField(source="share_link")
+    shareLink = serializers.SerializerMethodField(read_only=True)
+
+    def get_shareLink(self, obj):
+        return obj.share_link
 
     class Meta:
         model = NewsPost
         fields = '__all__'
+        read_only_fields = ['shareLink']
