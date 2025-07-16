@@ -49,4 +49,4 @@ class NewsPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsPost
         fields = '__all__'
-        read_only_fields = ['shareLink']
+        read_only_fields = ['share_Link']
