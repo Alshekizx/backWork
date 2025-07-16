@@ -74,6 +74,9 @@ class NewsPost(models.Model):
     def __str__(self):
         return self.header
     
+from django.db import models
+from news.constants import MAIN_CATEGORIES
+
 class Advertisement(models.Model):
     AD_TYPES = [
         ('image', 'Image'),
@@ -96,8 +99,8 @@ class Advertisement(models.Model):
     media_url = models.URLField(blank=True, null=True)
     ad_text = models.TextField(blank=True, null=True)
     html_code = models.TextField(blank=True, null=True)
-    redirect_url = models.URLField(blank=True, null=True)  # ✅ NEW
-    category = models.CharField(max_length=100, blank=True)
+    redirect_url = models.URLField(blank=True, null=True)
+    category = models.CharField(max_length=100, choices=MAIN_CATEGORIES)
     is_active = models.BooleanField(default=True)
     start_date = models.DateField()
     end_date = models.DateField()
