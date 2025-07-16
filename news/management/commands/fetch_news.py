@@ -95,22 +95,19 @@ def handle(self, *args, **kwargs):
             self.stdout.write(self.style.WARNING(f"No entries found for {source['name']}"))
             continue
 
-        cutoff = datetime.now() - timedelta(days=1)  # Only fetch last 24h posts
+        cutoff = datetime.now() - timedelta(days=1)
 
-        for entry in feed.entries:
-            # ✅ Skip if already exists
-            if NewsPost.objects.filter(share_link=entry.link).exists():
-                self.stdout.write(f"⏩ Skipped (duplicate): {entry.link}")
-                continue
-
-            # ✅ Skip if older than 24 hours
+        for entry in feed.entries:  # <- move the next lines INSIDE this loop
             published_parsed = getattr(entry, 'published_parsed', None)
             if not published_parsed:
                 continue
-
             published_dt = datetime.fromtimestamp(time.mktime(published_parsed))
             if published_dt < cutoff:
                 self.stdout.write(f"⏭️ Skipped old post: {entry.link}")
+                continue
+
+            if NewsPost.objects.filter(share_link=entry.link).exists():
+                self.stdout.write(f"⏩ Skipped (duplicate): {entry.link}")
                 continue
 
             # ✅ Try to get date info
