@@ -1,6 +1,8 @@
 # file: backend/news/urls.py
 from django.urls import path
 from .views import (
+    AdvertisementCreateView,
+    AdvertisementListView,
     NewsPostListView,
     NewsPostDetailView,
     set_top_news,
@@ -17,4 +19,7 @@ urlpatterns = [
 
     path('trending-news/set/', set_trending_news),
     path('trending-news/', list_trending_news),
+    
+    path('ads/', AdvertisementListView.as_view(), name='ads-list'),
+    path('ads/create/', AdvertisementCreateView.as_view(), name='ads-create'),
 ]

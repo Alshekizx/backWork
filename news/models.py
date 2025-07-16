@@ -73,4 +73,35 @@ class NewsPost(models.Model):
 
     def __str__(self):
         return self.header
+    
+class Advertisement(models.Model):
+    AD_TYPES = [
+        ('image', 'Image'),
+        ('video', 'Video'),
+        ('text', 'Text'),
+        ('html', 'HTML Code'),
+    ]
 
+    AD_SPACES = [
+        ('home-top', 'Home Page - Top Banner'),
+        ('blogview-top', 'Blog View - Top'),
+        ('blogview-bottom', 'Blog View - Bottom'),
+        ('blogselect-sidebar', 'Blog Select - Sidebar'),
+        ('blogselect-inline', 'Blog Select - Inline'),
+    ]
+
+    title = models.CharField(max_length=255)
+    ad_type = models.CharField(max_length=10, choices=AD_TYPES)
+    ad_space = models.CharField(max_length=50, choices=AD_SPACES)
+    media_url = models.URLField(blank=True, null=True)
+    ad_text = models.TextField(blank=True, null=True)
+    html_code = models.TextField(blank=True, null=True)
+    redirect_url = models.URLField(blank=True, null=True)  # ✅ NEW
+    category = models.CharField(max_length=100, blank=True)
+    is_active = models.BooleanField(default=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

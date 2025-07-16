@@ -1,7 +1,7 @@
 from rest_framework import generics
-from .serializers import NewsPostSerializer, CommentSerializer
+from .serializers import AdvertisementSerializer, NewsPostSerializer, CommentSerializer
 from django.db.models.functions import Lower
-from .models import Comment, NewsPost
+from .models import Advertisement, Comment, NewsPost
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
@@ -177,3 +177,20 @@ def auto_assign_trending_news(news_post):
         available_priorities = [30]
 
     assign_trending_news(news_post, min(available_priorities))
+
+class AdvertisementListView(generics.ListAPIView):
+    serializer_class = AdvertisementSerializer
+
+    def get_queryset(self):
+        queryset = Advertisement.objects.filter(is_active=True)
+        ad_space = self.request.query_params.get('space')
+        today = timezone.now().date()
+        queryset = queryset.filter(start_date__lte=today, end_date__gte=today)
+
+        if ad_space:
+            queryset = queryset.filter(ad_space=ad_space)
+
+        return queryset.order_by('created_at')
+class AdvertisementCreateView(generics.CreateAPIView):
+    queryset = Advertisement.objects.all()
+    serializer_class = AdvertisementSerializer

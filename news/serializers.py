@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import NewsPost, Comment, CustomUser
+from .models import Advertisement, NewsPost, Comment, CustomUser
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .constants import MAIN_CATEGORIES
@@ -50,3 +50,8 @@ class NewsPostSerializer(serializers.ModelSerializer):
         model = NewsPost
         fields = '__all__'
         read_only_fields = ['share_Link']
+        
+class AdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Advertisement
+        fields = '__all__'
