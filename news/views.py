@@ -31,7 +31,7 @@ class NewsPostListView(generics.ListCreateAPIView):
         return queryset
 
 # ✅ Retrieve a single post by UUID
-class NewsPostDetailView(generics.RetrieveAPIView):
+class NewsPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = NewsPost.objects.all()
     serializer_class = NewsPostSerializer
     lookup_field = 'id'
