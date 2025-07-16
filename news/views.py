@@ -194,3 +194,4 @@ class AdvertisementListView(generics.ListAPIView):
 class AdvertisementCreateView(generics.CreateAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
+    
