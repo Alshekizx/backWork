@@ -92,7 +92,7 @@ class Advertisement(models.Model):
         ('blogselect-sidebar', 'Blog Select - Sidebar'),
         ('blogselect-inline', 'Blog Select - Inline'),
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     ad_type = models.CharField(max_length=10, choices=AD_TYPES)
     ad_space = models.CharField(max_length=50, choices=AD_SPACES)

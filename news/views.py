@@ -206,3 +206,4 @@ class AdvertisementDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
     lookup_field = 'id'
+

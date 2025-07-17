@@ -2,6 +2,7 @@
 from django.urls import path
 from .views import (
     AdvertisementCreateView,
+    AdvertisementDetailView,
     AdvertisementListView,
     NewsPostListView,
     NewsPostDetailView,
@@ -10,6 +11,8 @@ from .views import (
     set_trending_news,
     list_trending_news,
 )
+
+
 
 urlpatterns = [
     path('news/', NewsPostListView.as_view(), name='news-list'),
@@ -22,4 +25,5 @@ urlpatterns = [
     
     path('ads/', AdvertisementListView.as_view(), name='ads-list'),
     path('ads/create/', AdvertisementCreateView.as_view(), name='ads-create'),
+   path('api/ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail')
 ]
