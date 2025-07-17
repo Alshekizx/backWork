@@ -191,10 +191,17 @@ class AdvertisementListView(generics.ListAPIView):
             queryset = queryset.filter(ad_space=ad_space)
 
         return queryset.order_by('created_at')
+
 class AdvertisementCreateView(generics.CreateAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)
+  
 class AdvertisementDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
