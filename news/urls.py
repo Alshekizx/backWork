@@ -25,5 +25,6 @@ urlpatterns = [
     
     path('ads/', AdvertisementListView.as_view(), name='ads-list'),
     path('ads/create/', AdvertisementCreateView.as_view(), name='ads-create'),
-   path('api/ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail')
+    path('ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail')
+
 ]
