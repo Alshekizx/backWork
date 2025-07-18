@@ -10,6 +10,9 @@ from .views import (
     list_top_news,
     set_trending_news,
     list_trending_news,
+    CreateEmployeeView, 
+    EmployeeListView, 
+    DeleteEmployeeView
 )
 
 
@@ -25,6 +28,10 @@ urlpatterns = [
     
     path('ads/', AdvertisementListView.as_view(), name='ads-list'),
     path('ads/create/', AdvertisementCreateView.as_view(), name='ads-create'),
-    path('ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail')
+    path('ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail'),
+    
+    path('manager/create-employee/', CreateEmployeeView.as_view(), name='create-employee'),
+    path('manager/employees/', EmployeeListView.as_view(), name='list-employees'),
+    path('manager/delete-employee/<uuid:id>/', DeleteEmployeeView.as_view(), name='delete-employee'),
 
 ]

@@ -4,6 +4,8 @@ from multiselectfield import MultiSelectField
 import uuid
 from .constants import MAIN_CATEGORIES
 from django.utils import timezone 
+from django.db import models
+from news.constants import MAIN_CATEGORIES
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
@@ -42,6 +44,35 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.name} - {self.comment[:30]}..."
 
+class ManagerAccount(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    employee_id = models.CharField(max_length=50, unique=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    profile_image = models.URLField(blank=True, null=True)
+    date_of_birth = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.employee_id} - {self.first_name} {self.last_name}"
+
+
+class EmployeeAccount(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    manager = models.ForeignKey(ManagerAccount, on_delete=models.CASCADE, related_name="employees")
+    employee_id = models.CharField(max_length=50, unique=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    profile_image = models.URLField(blank=True, null=True)
+    date_of_birth = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.employee_id} - {self.first_name} {self.last_name}"
+
+
 class NewsPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.URLField()
@@ -55,7 +86,10 @@ class NewsPost(models.Model):
     share_link = models.URLField()
     main_category = models.CharField(max_length=50, choices=MAIN_CATEGORIES)
     sub_category = models.CharField(max_length=100, blank=True)
-    
+    created_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, on_delete=models.SET_NULL)
+    updated_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, related_name='news_updates', on_delete=models.SET_NULL)
+    updated_at = models.DateTimeField(auto_now=True)
+
     is_top_news = models.BooleanField(default=False)
     top_news_priority = models.PositiveSmallIntegerField(
         null=True, blank=True, unique=True,
@@ -69,13 +103,13 @@ class NewsPost(models.Model):
         help_text="Priority from 1 (highest) to 30 (lowest) for trending news."
     )
     # ✅ New Field
+    
     is_posted = models.BooleanField(default=False, help_text="Mark as posted or unposted.")
-
+    
     def __str__(self):
         return self.header
     
-from django.db import models
-from news.constants import MAIN_CATEGORIES
+
 
 class Advertisement(models.Model):
     AD_TYPES = [
@@ -105,6 +139,10 @@ class Advertisement(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, on_delete=models.SET_NULL)
+    updated_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, related_name='ad_updates', on_delete=models.SET_NULL)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
+

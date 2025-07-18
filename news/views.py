@@ -1,13 +1,14 @@
-from rest_framework import generics
-from .serializers import AdvertisementSerializer, NewsPostSerializer, CommentSerializer
+from .serializers import AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer,ManagerAccountSerializer, EmployeeAccountSerializer
 from django.db.models.functions import Lower
-from .models import Advertisement, Comment, NewsPost
+from .models import Advertisement, Comment, CustomUser, NewsPost, ManagerAccount, EmployeeAccount
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status,generics
 from django.utils import timezone
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from rest_framework.permissions import BasePermission
+
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
@@ -207,3 +208,37 @@ class AdvertisementDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AdvertisementSerializer
     lookup_field = 'id'
 
+class IsManager(BasePermission):
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'manageraccount')
+
+class IsEmployee(BasePermission):
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'employeeaccount')
+    
+class CreateEmployeeView(generics.CreateAPIView):
+    serializer_class = EmployeeAccountSerializer
+    permission_classes = [IsManager]
+
+    def perform_create(self, serializer):
+        serializer.save(manager=self.request.user.manageraccount)
+
+class EmployeeListView(generics.ListAPIView):
+    serializer_class = EmployeeAccountSerializer
+    permission_classes = [IsManager]
+
+    def get_queryset(self):
+        return EmployeeAccount.objects.filter(manager=self.request.user.manageraccount)
+
+class DeleteEmployeeView(generics.DestroyAPIView):
+    serializer_class = EmployeeAccountSerializer
+    permission_classes = [IsManager]
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return EmployeeAccount.objects.filter(manager=self.request.user.manageraccount)
+
+class UserListView(generics.ListAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsManager]
+    queryset = CustomUser.objects.all()
