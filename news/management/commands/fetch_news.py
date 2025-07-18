@@ -21,29 +21,92 @@ CATEGORY_KEYWORDS = {
 
 
 RSS_SOURCES = [
+    # 🌍 World News
     {
-        "name": "Vision FM – Science & Technology",
-        "website": "https://visionfm.ng",
-        "rss": "https://visionfm.ng/rss/category/science-technology",
-        "main_category": "Scientific",
+        "name": "BBC World News",
+        "website": "https://www.bbc.com",
+        "rss": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "main_category": "World-News",
+    },
+    {
+        "name": "Reuters World News",
+        "website": "https://www.reuters.com",
+        "rss": "https://www.reutersagency.com/feed/?best-topics=world&post_type=best",
+        "main_category": "World-News",
     },
     {
         "name": "Africanews – World News",
         "website": "https://www.africanews.com",
-        "rss": "https://www.africanews.com/feed/latest",  # world category
+        "rss": "https://www.africanews.com/feed/latest",
         "main_category": "World-News",
     },
+
+    # 💻 Technology
     {
-        "name": "Techpoint Africa – Tech",
+        "name": "TechCrunch",
+        "website": "https://techcrunch.com",
+        "rss": "https://techcrunch.com/feed/",
+        "main_category": "Technology",
+    },
+    {
+        "name": "The Verge Technology",
+        "website": "https://www.theverge.com",
+        "rss": "https://www.theverge.com/rss/index.xml",
+        "main_category": "Technology",
+    },
+    {
+        "name": "Techpoint Africa",
         "website": "https://techpoint.africa",
         "rss": "https://techpoint.africa/feed",
         "main_category": "Technology",
     },
+
+    # 🔬 Scientific
     {
-        "name": "Nairametrics – Business",
+        "name": "Scientific American",
+        "website": "https://www.scientificamerican.com",
+        "rss": "https://www.scientificamerican.com/feed/rss/",
+        "main_category": "Scientific",
+    },
+    {
+        "name": "Nature News",
+        "website": "https://www.nature.com",
+        "rss": "https://www.nature.com/subjects/news.rss",
+        "main_category": "Scientific",
+    },
+
+    # 💵 Business
+    {
+        "name": "Nairametrics",
         "website": "https://nairametrics.com",
         "rss": "https://nairametrics.com/feed",
         "main_category": "Business",
+    },
+    {
+        "name": "Business Insider",
+        "website": "https://www.businessinsider.com",
+        "rss": "https://www.businessinsider.com/rss",
+        "main_category": "Business",
+    },
+    {
+        "name": "Bloomberg ETFs",
+        "website": "https://www.bloomberg.com",
+        "rss": "https://www.bloomberg.com/feed/podcast/etf-report.xml",
+        "main_category": "Business",
+    },
+
+    # ⚽ Sports
+    {
+        "name": "BBC Sport",
+        "website": "https://www.bbc.com/sport",
+        "rss": "http://feeds.bbci.co.uk/sport/rss.xml",
+        "main_category": "Sport",
+    },
+    {
+        "name": "ESPN News",
+        "website": "https://www.espn.com",
+        "rss": "https://www.espn.com/espn/rss/news",
+        "main_category": "Sport",
     },
     {
         "name": "Vision FM – Sports",
@@ -51,11 +114,13 @@ RSS_SOURCES = [
         "rss": "https://visionfm.ng/rss/category/sports",
         "main_category": "Sport",
     },
+
+    # 🏛️ Politics
     {
-        "name": "Fresh News Nigeria – Local News",
-        "website": "https://home.freshnewsng.com",
-        "rss": "https://home.freshnewsng.com/rss/category/latest-posts",
-        "main_category": "Local-News",
+        "name": "Reuters Politics",
+        "website": "https://www.reuters.com",
+        "rss": "https://www.reutersagency.com/feed/?best-topics=politics&post_type=best",
+        "main_category": "Politics",
     },
     {
         "name": "Punch Nigeria – Politics",
@@ -63,11 +128,45 @@ RSS_SOURCES = [
         "rss": "https://rss.punchng.com/v1/category/politics",
         "main_category": "Politics",
     },
+
+    # 🎬 Entertainment
     {
-        "name": "Nollywood Reinvented – Entertainment",
+        "name": "Variety",
+        "website": "https://variety.com",
+        "rss": "https://variety.com/feed/",
+        "main_category": "Entertainment",
+    },
+    {
+        "name": "Hollywood Reporter",
+        "website": "https://www.hollywoodreporter.com",
+        "rss": "https://www.hollywoodreporter.com/c/rss-feed/",
+        "main_category": "Entertainment",
+    },
+    {
+        "name": "Nollywood Reinvented",
         "website": "https://www.nollywoodreinvented.com",
         "rss": "https://www.nollywoodreinvented.com/feed",
         "main_category": "Entertainment",
+    },
+
+    # 🏠 Local News (Nigeria)
+    {
+        "name": "Guardian Nigeria",
+        "website": "https://guardian.ng",
+        "rss": "https://guardian.ng/feed/",
+        "main_category": "Local-News",
+    },
+    {
+        "name": "Vanguard Nigeria",
+        "website": "https://www.vanguardngr.com",
+        "rss": "https://www.vanguardngr.com/feed/",
+        "main_category": "Local-News",
+    },
+    {
+        "name": "Fresh News Nigeria – Local News",
+        "website": "https://home.freshnewsng.com",
+        "rss": "https://home.freshnewsng.com/rss/category/latest-posts",
+        "main_category": "Local-News",
     },
 ]
 
