@@ -311,6 +311,8 @@ def record_visit(post_id):
     if not created:
         visit.count = F('count') + 1
         visit.save()
+    else:
+        visit.save()
         
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -336,4 +338,15 @@ def get_visit_stats(request, post_id):
         'monthly_visitors': monthly_count
     })
     
-    
+@api_view(['GET'])
+def get_stats(request):
+    today = now().date()
+    start_of_month = today.replace(day=1)
+
+    daily_visitors = BlogVisit.objects.filter(timestamp__date=today).count()
+    monthly_visitors = BlogVisit.objects.filter(timestamp__date__gte=start_of_month).count()
+
+    return Response({
+        "daily_visitors": daily_visitors,
+        "monthly_visitors": monthly_visitors,
+    })

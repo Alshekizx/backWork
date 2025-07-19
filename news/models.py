@@ -201,8 +201,11 @@ class Advertisement(models.Model):
 # models.py
 class BlogVisit(models.Model):
     post = models.ForeignKey(NewsPost, on_delete=models.CASCADE)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=timezone.now)
     count = models.PositiveIntegerField(default=1)
 
     class Meta:
         unique_together = ('post', 'date')
+
+    def __str__(self):
+        return f"{self.post.header} - {self.date}: {self.count} views"
