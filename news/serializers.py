@@ -45,7 +45,7 @@ class NewsPostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     share_Link = serializers.SerializerMethodField(read_only=True)
 
-    def get_shareLink(self, obj):
+    def get_share_Link(self, obj):
         return obj.share_link
 
     class Meta:
