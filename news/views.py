@@ -1,4 +1,4 @@
-from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer,ManagerAccountSerializer, EmployeeAccountSerializer
+from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer
 from django.db.models.functions import Lower
 from .models import AdminAccount, Advertisement, Comment, CustomUser, NewsPost
 from rest_framework.response import Response
