@@ -77,7 +77,6 @@ class AdminAccountSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        # Extract related user fields
         email = validated_data.pop('email')
         employee_id = validated_data['employee_id']
         full_name = f"{validated_data['first_name']} {validated_data['last_name']}"
@@ -85,8 +84,9 @@ class AdminAccountSerializer(serializers.ModelSerializer):
         profile_image = validated_data.pop('profile_image', None)
         date_of_birth = validated_data.pop('date_of_birth')
         user_type = validated_data.get('user_type', 'employee')
+        manager = validated_data.get('manager')  # Optional
 
-        # Create CustomUser instance
+        # Create the user
         user = CustomUser.objects.create_user(
             username=employee_id,
             email=email,
@@ -99,7 +99,7 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             user.profile_picture = profile_image
             user.save()
 
-        # Create AdminAccount
+        # Create admin account
         admin_account = AdminAccount.objects.create(
             user=user,
             employee_id=employee_id,
@@ -108,9 +108,8 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             email=email,
             date_of_birth=date_of_birth,
             profile_image=profile_image,
-            password=make_password(password),
             user_type=user_type,
-            manager=validated_data.get('manager')  # Optional for employees
+            manager=manager if user_type == 'employee' else None  # Only employees have managers
         )
 
         return admin_account
