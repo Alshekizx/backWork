@@ -69,50 +69,43 @@ class EmployeeAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmployeeAccount
         fields = '__all__'
+        
 class ManagerSignupSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(write_only=True)
+    date_of_birth = serializers.DateField(write_only=True)
+    profile_image = serializers.ImageField(write_only=True, required=False)
 
     class Meta:
         model = ManagerAccount
-        fields = [
-            'id',
-            'employee_id',
-            'first_name',
-            'last_name',
-            'email',
-            'password',
-            'date_of_birth',
-            'profile_image',
-        ]
+        fields = ['id', 'employee_id', 'first_name', 'last_name', 'password', 'email', 'date_of_birth', 'profile_image']
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True},
         }
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-
         # Create the associated CustomUser
         user = CustomUser.objects.create_user(
             username=validated_data['employee_id'],
             email=validated_data['email'],
-            password=password,
+            password=validated_data['password'],
             full_name=f"{validated_data['first_name']} {validated_data['last_name']}",
         )
 
-        # Create the ManagerAccount and link it to CustomUser
+        # Create ManagerAccount
         manager = ManagerAccount.objects.create(
             user=user,
             employee_id=validated_data['employee_id'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             email=validated_data['email'],
-            date_of_birth=validated_data.get('date_of_birth'),
+            date_of_birth=validated_data['date_of_birth'],
             profile_image=validated_data.get('profile_image'),
-            password=make_password(password),  # Save hashed password in ManagerAccount too
+            password=make_password(validated_data['password']),
+            hashed_pw=make_password(validated_data['password'])
         )
 
         return manager
-
+    
 class LoginSerializer(serializers.Serializer):
     employee_id = serializers.CharField()
     password = serializers.CharField()
