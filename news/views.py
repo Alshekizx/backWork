@@ -1,6 +1,6 @@
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer
-from django.db.models.functions import Lower
-from .models import AdminAccount, Advertisement, BlogVisit, Comment, CustomUser, NewsPost,NewsPost, Advertisement
+
+from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement
 from rest_framework.response import Response
 from rest_framework import status,generics
 from django.db.models import Sum
@@ -11,13 +11,11 @@ from django.db import transaction
 from rest_framework.permissions import BasePermission,IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.hashers import check_password
 from .serializers import LoginSerializer
 from rest_framework.response import Response
 from django.utils.timezone import now
 from datetime import timedelta
-from django.db.models import F
 
 
 # ✅ List all posts, with optional search, category, date filtering
@@ -305,14 +303,7 @@ class DeleteAdminView(generics.DestroyAPIView):
     def get_queryset(self):
         return AdminAccount.objects.filter(user_type='admin')
 
-def record_visit(post_id):
-    today = now().date()
-    visit, created = BlogVisit.objects.get_or_create(post_id=post_id, date=today)
-    if not created:
-        visit.count = F('count') + 1
-        visit.save()
-    else:
-        visit.save()
+
         
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -338,15 +329,51 @@ def get_visit_stats(request, post_id):
         'monthly_visitors': monthly_count
     })
     
+ 
+@api_view(["POST"])
+def track_blog_visit(request, post_id):
+    try:
+        post = NewsPost.objects.get(id=post_id)
+        post.update_visit_counts()
+        return Response({
+            "message": "Visit recorded",
+            "daily_visitors": post.daily_visitors,
+            "monthly_visitors": post.monthly_visitors
+        })
+    except NewsPost.DoesNotExist:
+        return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(["POST"])
+def track_blog_visit(request, post_id):
+    try:
+        post = NewsPost.objects.get(id=post_id)
+        post.update_visit_counts()
+        return Response({
+            "message": "Visit recorded",
+            "daily_visitors": post.daily_visitors,
+            "monthly_visitors": post.monthly_visitors
+        })
+    except NewsPost.DoesNotExist:
+        return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
 @api_view(['GET'])
-def get_stats(request):
-    today = now().date()
-    start_of_month = today.replace(day=1)
+@permission_classes([IsAuthenticated])
+def get_visit_stats(request, post_id):
+    try:
+        post = NewsPost.objects.get(id=post_id)
+        total_posts = NewsPost.objects.count()
+        edited_posts = NewsPost.objects.exclude(updated_by_employee=None).count()
+        total_ads = Advertisement.objects.count()
+        active_ads = Advertisement.objects.filter(is_active=True).count()
 
-    daily_visitors = BlogVisit.objects.filter(timestamp__date=today).count()
-    monthly_visitors = BlogVisit.objects.filter(timestamp__date__gte=start_of_month).count()
-
-    return Response({
-        "daily_visitors": daily_visitors,
-        "monthly_visitors": monthly_visitors,
-    })
+        return Response({
+            "totalPosts": total_posts,
+            "editedPosts": edited_posts,
+            "totalAds": total_ads,
+            "activeAds": active_ads,
+            'daily_visitors': post.daily_visitors,
+            'monthly_visitors': post.monthly_visitors
+        })
+    except NewsPost.DoesNotExist:
+        return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)

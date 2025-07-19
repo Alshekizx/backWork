@@ -106,6 +106,10 @@ class NewsPost(models.Model):
     main_category = models.CharField(max_length=50, choices=MAIN_CATEGORIES)
     sub_category = models.CharField(max_length=100, blank=True)
    
+    daily_visitors = models.IntegerField(default=0)
+    monthly_visitors = models.IntegerField(default=0)
+    last_visited = models.DateField(null=True, blank=True)
+    
     created_by_employee = models.ForeignKey(
         AdminAccount,
         null=True,
@@ -140,7 +144,20 @@ class NewsPost(models.Model):
     # ✅ New Field
     
     is_posted = models.BooleanField(default=False, help_text="Mark as posted or unposted.")
-    
+    def update_visit_counts(self):
+        today = timezone.now().date()
+        if self.last_visited != today:
+            self.daily_visitors = 1
+            if self.last_visited and self.last_visited.month != today.month:
+                self.monthly_visitors = 1
+            else:
+                self.monthly_visitors += 1
+            self.last_visited = today
+        else:
+            self.daily_visitors += 1
+            self.monthly_visitors += 1
+        self.save()
+        
     def __str__(self):
         return self.header
     
@@ -198,14 +215,3 @@ class Advertisement(models.Model):
 
 
 
-# models.py
-class BlogVisit(models.Model):
-    post = models.ForeignKey(NewsPost, on_delete=models.CASCADE)
-    date = models.DateField(default=timezone.now)
-    count = models.PositiveIntegerField(default=1)
-
-    class Meta:
-        unique_together = ('post', 'date')
-
-    def __str__(self):
-        return f"{self.post.header} - {self.date}: {self.count} views"
