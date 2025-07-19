@@ -4,6 +4,23 @@ from multiselectfield import MultiSelectField
 import uuid
 from .constants import MAIN_CATEGORIES
 from django.utils import timezone 
+from django.contrib.auth.models import BaseUserManager
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, username, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+        email = self.normalize_email(email)
+        user = self.model(email=email, username=username, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, username, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, username, password, **extra_fields)
+   
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
@@ -18,12 +35,11 @@ class CustomUser(AbstractUser):
     comment_history = models.ManyToManyField("Comment", blank=True, related_name="commented_by_users")
     profile_picture = models.URLField(blank=True, null=True)
     time_joined = models.DateTimeField(default=timezone.now)
-    
+    objects = CustomUserManager()
     def __str__(self):
         return self.username or self.full_name or "Anonymous User"
 
-
-    
+ 
 class Source(models.Model):
     name = models.CharField(max_length=255)
     website = models.URLField()
@@ -42,9 +58,16 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.name} - {self.comment[:30]}..."
 
-class ManagerAccount(models.Model):
+class AdminAccount(models.Model):
+    USER_TYPES = [
+        ('manager', 'Manager'),
+        ('employee', 'Employee'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="manager_profile")
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="account_profile")
+    user_type = models.CharField(max_length=10, choices=USER_TYPES)
+    
     employee_id = models.CharField(max_length=50, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -53,26 +76,20 @@ class ManagerAccount(models.Model):
     date_of_birth = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     password = models.CharField(max_length=128)
-    
-    def __str__(self):
-        return f"{self.employee_id} - {self.first_name} {self.last_name}"
 
+    # Nullable: only applicable for employees
+    manager = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        related_name='employees',
+        null=True,
+        blank=True,
+        limit_choices_to={'user_type': 'manager'},
+        help_text="Assign a manager if user_type is 'employee'"
+    )
 
-class EmployeeAccount(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="employee_profile")
-    manager = models.ForeignKey(ManagerAccount, on_delete=models.CASCADE, related_name="employees")
-    employee_id = models.CharField(max_length=50, unique=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    profile_image = models.URLField(blank=True, null=True)
-    date_of_birth = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    password = models.CharField(max_length=128)
-    
     def __str__(self):
-        return f"{self.employee_id} - {self.first_name} {self.last_name}"
+        return f"{self.employee_id} - {self.first_name} {self.last_name} ({self.user_type})"
 
 
 class NewsPost(models.Model):
@@ -88,8 +105,24 @@ class NewsPost(models.Model):
     share_link = models.URLField()
     main_category = models.CharField(max_length=50, choices=MAIN_CATEGORIES)
     sub_category = models.CharField(max_length=100, blank=True)
-    created_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, on_delete=models.SET_NULL)
-    updated_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, related_name='news_updates', on_delete=models.SET_NULL)
+   
+    created_by_employee = models.ForeignKey(
+        AdminAccount,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        limit_choices_to={'user_type': 'employee'},
+        related_name='news_created'
+    )
+    updated_by_employee = models.ForeignKey(
+        AdminAccount,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='news_updates',
+        limit_choices_to={'user_type': 'employee'}
+    )
+
     updated_at = models.DateTimeField(auto_now=True)
 
     is_top_news = models.BooleanField(default=False)
@@ -141,10 +174,27 @@ class Advertisement(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, on_delete=models.SET_NULL)
-    updated_by_employee = models.ForeignKey(EmployeeAccount, null=True, blank=True, related_name='ad_updates', on_delete=models.SET_NULL)
+    created_by_employee = models.ForeignKey(
+        AdminAccount,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        limit_choices_to={'user_type': 'employee'},
+        related_name='ads_created'
+    )
+    updated_by_employee = models.ForeignKey(
+        AdminAccount,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        limit_choices_to={'user_type': 'employee'},
+        related_name='ad_updates'
+    )
+
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
+
+
 

@@ -1,6 +1,6 @@
-from .serializers import AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer,ManagerAccountSerializer, EmployeeAccountSerializer
+from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer,ManagerAccountSerializer, EmployeeAccountSerializer
 from django.db.models.functions import Lower
-from .models import Advertisement, Comment, CustomUser, NewsPost, ManagerAccount, EmployeeAccount
+from .models import AdminAccount, Advertisement, Comment, CustomUser, NewsPost
 from rest_framework.response import Response
 from rest_framework import status,generics
 from django.utils import timezone
@@ -13,6 +13,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.hashers import check_password
 from .serializers import ManagerSignupSerializer, LoginSerializer
+from rest_framework.exceptions import ValidationError
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
@@ -214,92 +215,96 @@ class AdvertisementDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class IsManager(BasePermission):
     def has_permission(self, request, view):
-        return hasattr(request.user, 'manageraccount')
+        return hasattr(request.user, 'account_profile') and request.user.account_profile.user_type == 'manager'
 
 class IsEmployee(BasePermission):
     def has_permission(self, request, view):
-        return hasattr(request.user, 'employeeaccount')
+        return hasattr(request.user, 'account_profile') and request.user.account_profile.user_type == 'employee'
     
 class CreateEmployeeView(generics.CreateAPIView):
-    serializer_class = EmployeeAccountSerializer
+    serializer_class = AdminAccountSerializer
     permission_classes = [IsManager]
 
     def perform_create(self, serializer):
-        serializer.save(manager=self.request.user.manageraccount)
+        serializer.save(manager=self.request.user.account_profile, user_type='employee')
+        
 
-class EmployeeListView(generics.ListAPIView):
-    serializer_class = EmployeeAccountSerializer
-    permission_classes = [IsManager]
-
-    def get_queryset(self):
-        return EmployeeAccount.objects.filter(manager=self.request.user.manageraccount)
-
-class DeleteEmployeeView(generics.DestroyAPIView):
-    serializer_class = EmployeeAccountSerializer
-    permission_classes = [IsManager]
-    lookup_field = 'id'
-
-    def get_queryset(self):
-        return EmployeeAccount.objects.filter(manager=self.request.user.manageraccount)
 
 class UserListView(generics.ListAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [IsManager]
     queryset = CustomUser.objects.all()
     
-class ManagerSignupView(generics.CreateAPIView):
-    serializer_class = ManagerSignupSerializer
+
+class AdminSignupView(generics.CreateAPIView):
+    serializer_class = AdminAccountSerializer
 
     def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        user_type = data.get('user_type', 'admin')  # fallback to 'admin'
         response = super().create(request, *args, **kwargs)
-        manager = ManagerAccount.objects.get(employee_id=response.data['employee_id'])
-        token, _ = Token.objects.get_or_create(user=manager)
+
+        employee_id = response.data.get('employee_id')
+        if not employee_id:
+            raise ValidationError({'employee_id': 'employee_id not returned by serializer'})
+
+        try:
+            user = AdminAccount.objects.get(employee_id=employee_id, user_type=user_type)
+        except AdminAccount.DoesNotExist:
+            raise ValidationError({'user': f'{user_type.title()} not found after creation'})
+
+        token, _ = Token.objects.get_or_create(user=user.user)
+
         return Response({
             'token': token.key,
-            'manager_id': manager.id,
-            'name': f"{manager.first_name} {manager.last_name}"
+            'user_id': user.id,
+            'name': f"{user.first_name} {user.last_name}",
+            'user_type': user.user_type
         }, status=status.HTTP_201_CREATED)
+
+
+class AdminLoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        employee_id = serializer.validated_data['employee_id']
+        password = serializer.validated_data['password']
+
+        try:
+            user = AdminAccount.objects.get(employee_id=employee_id)
+            if check_password(password, user.password):
+                token, _ = Token.objects.get_or_create(user=user.user)
+                return Response({
+                    'token': token.key,
+                    'user_id': user.id,
+                    'name': f"{user.first_name} {user.last_name}",
+                    'user_type': user.user_type
+                })
+            else:
+                return Response({'error': 'Invalid password'}, status=400)
+        except AdminAccount.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+
+
+class IsAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'account_profile') and request.user.account_profile.user_type == 'admin'
+
+class AdminListView(generics.ListAPIView):
+    serializer_class = AdminAccountSerializer
+    permission_classes = [IsAdmin]
+
+    def get_queryset(self):
+        return AdminAccount.objects.filter(user_type='admin')
+
+class DeleteAdminView(generics.DestroyAPIView):
+    serializer_class = AdminAccountSerializer
+    permission_classes = [IsAdmin]
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return AdminAccount.objects.filter(user_type='admin')
+
         
-class ManagerLoginView(APIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        employee_id = serializer.validated_data['employee_id']
-        password = serializer.validated_data['password']
-
-        try:
-            manager = ManagerAccount.objects.get(employee_id=employee_id)
-            if check_password(password, manager.password):
-                token, _ = Token.objects.get_or_create(user=manager)
-                return Response({
-                    'token': token.key,
-                    'manager_id': manager.id,
-                    'name': f"{manager.first_name} {manager.last_name}"
-                })
-            else:
-                return Response({'error': 'Invalid password'}, status=400)
-        except ManagerAccount.DoesNotExist:
-            return Response({'error': 'Manager not found'}, status=404)
-
-class EmployeeLoginView(APIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        employee_id = serializer.validated_data['employee_id']
-        password = serializer.validated_data['password']
-
-        try:
-            employee = EmployeeAccount.objects.get(employee_id=employee_id)
-            if check_password(password, employee.password):
-                token, _ = Token.objects.get_or_create(user=employee)
-                return Response({
-                    'token': token.key,
-                    'employee_id': employee.id,
-                    'name': f"{employee.first_name} {employee.last_name}"
-                })
-            else:
-                return Response({'error': 'Invalid password'}, status=400)
-        except EmployeeAccount.DoesNotExist:
-            return Response({'error': 'Employee not found'}, status=404)
+        
