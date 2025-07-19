@@ -240,19 +240,13 @@ class AdminSignupView(generics.CreateAPIView):
     serializer_class = AdminAccountSerializer
 
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        user_type = data.get('user_type', 'admin')  # fallback to 'admin'
-        response = super().create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        employee_id = response.data.get('employee_id')
-        if not employee_id:
-            raise ValidationError({'employee_id': 'employee_id not returned by serializer'})
+        # Save user with default type 'admin' unless specified
+        user = serializer.save(user_type=request.data.get('user_type', 'admin'))
 
-        try:
-            user = AdminAccount.objects.get(employee_id=employee_id, user_type=user_type)
-        except AdminAccount.DoesNotExist:
-            raise ValidationError({'user': f'{user_type.title()} not found after creation'})
-
+        # Create or retrieve token
         token, _ = Token.objects.get_or_create(user=user.user)
 
         return Response({
