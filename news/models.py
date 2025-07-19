@@ -4,8 +4,6 @@ from multiselectfield import MultiSelectField
 import uuid
 from .constants import MAIN_CATEGORIES
 from django.utils import timezone 
-from django.db import models
-from news.constants import MAIN_CATEGORIES
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
@@ -46,6 +44,7 @@ class Comment(models.Model):
 
 class ManagerAccount(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="manager_profile")
     employee_id = models.CharField(max_length=50, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -53,13 +52,15 @@ class ManagerAccount(models.Model):
     profile_image = models.URLField(blank=True, null=True)
     date_of_birth = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    password = models.CharField(max_length=128)
+    
     def __str__(self):
         return f"{self.employee_id} - {self.first_name} {self.last_name}"
 
 
 class EmployeeAccount(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="employee_profile")
     manager = models.ForeignKey(ManagerAccount, on_delete=models.CASCADE, related_name="employees")
     employee_id = models.CharField(max_length=50, unique=True)
     first_name = models.CharField(max_length=100)
@@ -68,7 +69,8 @@ class EmployeeAccount(models.Model):
     profile_image = models.URLField(blank=True, null=True)
     date_of_birth = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    password = models.CharField(max_length=128)
+    
     def __str__(self):
         return f"{self.employee_id} - {self.first_name} {self.last_name}"
 

@@ -8,7 +8,11 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from rest_framework.permissions import BasePermission
-
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from django.contrib.auth.hashers import check_password
+from .serializers import ManagerSignupSerializer, LoginSerializer
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
@@ -242,3 +246,60 @@ class UserListView(generics.ListAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [IsManager]
     queryset = CustomUser.objects.all()
+    
+class ManagerSignupView(generics.CreateAPIView):
+    serializer_class = ManagerSignupSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        manager = ManagerAccount.objects.get(employee_id=response.data['employee_id'])
+        token, _ = Token.objects.get_or_create(user=manager)
+        return Response({
+            'token': token.key,
+            'manager_id': manager.id,
+            'name': f"{manager.first_name} {manager.last_name}"
+        }, status=status.HTTP_201_CREATED)
+        
+class ManagerLoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        employee_id = serializer.validated_data['employee_id']
+        password = serializer.validated_data['password']
+
+        try:
+            manager = ManagerAccount.objects.get(employee_id=employee_id)
+            if check_password(password, manager.password):
+                token, _ = Token.objects.get_or_create(user=manager)
+                return Response({
+                    'token': token.key,
+                    'manager_id': manager.id,
+                    'name': f"{manager.first_name} {manager.last_name}"
+                })
+            else:
+                return Response({'error': 'Invalid password'}, status=400)
+        except ManagerAccount.DoesNotExist:
+            return Response({'error': 'Manager not found'}, status=404)
+
+class EmployeeLoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        employee_id = serializer.validated_data['employee_id']
+        password = serializer.validated_data['password']
+
+        try:
+            employee = EmployeeAccount.objects.get(employee_id=employee_id)
+            if check_password(password, employee.password):
+                token, _ = Token.objects.get_or_create(user=employee)
+                return Response({
+                    'token': token.key,
+                    'employee_id': employee.id,
+                    'name': f"{employee.first_name} {employee.last_name}"
+                })
+            else:
+                return Response({'error': 'Invalid password'}, status=400)
+        except EmployeeAccount.DoesNotExist:
+            return Response({'error': 'Employee not found'}, status=404)
