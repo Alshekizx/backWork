@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.hashers import check_password
-from .serializers import ManagerSignupSerializer, LoginSerializer
+from .serializers import LoginSerializer
 from rest_framework.exceptions import ValidationError
 
 # ✅ List all posts, with optional search, category, date filtering

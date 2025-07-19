@@ -35146,3 +35146,113 @@ Traceback (most recent call last):
   File "/home/seyi/Documents/naijaTalk/backend/news/views.py", line 1, in <module>
     from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer,ManagerAccountSerializer, EmployeeAccountSerializer
 ImportError: cannot import name 'ManagerAccountSerializer' from 'news.serializers' (/home/seyi/Documents/naijaTalk/backend/news/serializers.py). Did you mean: 'AdminAccountSerializer'?
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 457, in execute
+    self.check(**check_kwargs)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 492, in check
+    all_issues = checks.run_checks(
+                 ^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+           ^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+                   ^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/seyi/Documents/naijaTalk/backend/newsapi/urls.py", line 21, in <module>
+    from news.views import CommentCreateView, NewsPostDetailView, NewsPostListView
+  File "/home/seyi/Documents/naijaTalk/backend/news/views.py", line 15, in <module>
+    from .serializers import ManagerSignupSerializer, LoginSerializer
+ImportError: cannot import name 'ManagerSignupSerializer' from 'news.serializers' (/home/seyi/Documents/naijaTalk/backend/news/serializers.py)
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 457, in execute
+    self.check(**check_kwargs)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 492, in check
+    all_issues = checks.run_checks(
+                 ^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+           ^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+                   ^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/seyi/Documents/naijaTalk/backend/newsapi/urls.py", line 21, in <module>
+    from news.views import CommentCreateView, NewsPostDetailView, NewsPostListView
+  File "/home/seyi/Documents/naijaTalk/backend/news/views.py", line 15, in <module>
+    from .serializers import ManagerSignupSerializer, LoginSerializer
+ImportError: cannot import name 'ManagerSignupSerializer' from 'news.serializers' (/home/seyi/Documents/naijaTalk/backend/news/serializers.py)
