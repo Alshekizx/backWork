@@ -5,6 +5,7 @@ from .views import (
     AdvertisementListView,
     NewsPostListView,
     NewsPostDetailView,
+    admin_stats,
     set_top_news,
     list_top_news,
     set_trending_news,
@@ -32,4 +33,6 @@ urlpatterns = [
     path('admin/login/', AdminLoginView.as_view(), name='admin-login'),
     path('admin/list/', AdminListView.as_view(), name='admin-list'),
     path('admin/delete/<uuid:id>/', DeleteAdminView.as_view(), name='admin-delete'),
+    
+    path("admin/stats/", admin_stats),
 ]

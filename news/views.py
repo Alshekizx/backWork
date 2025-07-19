@@ -1,19 +1,24 @@
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer
 from django.db.models.functions import Lower
-from .models import AdminAccount, Advertisement, Comment, CustomUser, NewsPost
+from .models import AdminAccount, Advertisement, BlogVisit, Comment, CustomUser, NewsPost,NewsPost, Advertisement
 from rest_framework.response import Response
 from rest_framework import status,generics
+from django.db.models import Sum
 from django.utils import timezone
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission,IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.hashers import check_password
 from .serializers import LoginSerializer
-from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
+from django.utils.timezone import now
+from datetime import timedelta
+from django.db.models import F
+
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
@@ -300,5 +305,35 @@ class DeleteAdminView(generics.DestroyAPIView):
     def get_queryset(self):
         return AdminAccount.objects.filter(user_type='admin')
 
+def record_visit(post_id):
+    today = now().date()
+    visit, created = BlogVisit.objects.get_or_create(post_id=post_id, date=today)
+    if not created:
+        visit.count = F('count') + 1
+        visit.save()
         
-        
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_visit_stats(request, post_id):
+    today = now().date()
+    month_start = today.replace(day=1)
+    total_posts = NewsPost.objects.count()
+    edited_posts = NewsPost.objects.exclude(updated_by_employee=None).count()
+    total_ads = Advertisement.objects.count()
+    active_ads = Advertisement.objects.filter(is_active=True).count()
+
+    # Simulated visitor stats — replace with actual logic if you track visits
+    thirty_days_ago = today - timedelta(days=30)
+    daily_count = BlogVisit.objects.filter(post_id=post_id, date=today).aggregate(total=Sum('count'))['total'] or 0
+    monthly_count = BlogVisit.objects.filter(post_id=post_id, date__gte=month_start).aggregate(total=Sum('count'))['total'] or 0
+
+    return Response({
+        "totalPosts": total_posts,
+        "editedPosts": edited_posts,
+        "totalAds": total_ads,
+        "activeAds": active_ads,
+        'daily_visitors': daily_count,
+        'monthly_visitors': monthly_count
+    })
+    
+    

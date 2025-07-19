@@ -198,3 +198,11 @@ class Advertisement(models.Model):
 
 
 
+# models.py
+class BlogVisit(models.Model):
+    post = models.ForeignKey(NewsPost, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    count = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ('post', 'date')
