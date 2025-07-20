@@ -17,6 +17,8 @@ from rest_framework.response import Response
 from django.utils.timezone import now
 from datetime import timedelta
 
+from news import models
+
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
@@ -303,60 +305,6 @@ class DeleteAdminView(generics.DestroyAPIView):
     def get_queryset(self):
         return AdminAccount.objects.filter(user_type='admin')
 
-
-        
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_visit_stats(request, post_id):
-    today = now().date()
-    month_start = today.replace(day=1)
-    total_posts = NewsPost.objects.count()
-    edited_posts = NewsPost.objects.exclude(updated_by_employee=None).count()
-    total_ads = Advertisement.objects.count()
-    active_ads = Advertisement.objects.filter(is_active=True).count()
-
-    # Simulated visitor stats — replace with actual logic if you track visits
-    thirty_days_ago = today - timedelta(days=30)
-    daily_count = BlogVisit.objects.filter(post_id=post_id, date=today).aggregate(total=Sum('count'))['total'] or 0
-    monthly_count = BlogVisit.objects.filter(post_id=post_id, date__gte=month_start).aggregate(total=Sum('count'))['total'] or 0
-
-    return Response({
-        "totalPosts": total_posts,
-        "editedPosts": edited_posts,
-        "totalAds": total_ads,
-        "activeAds": active_ads,
-        'daily_visitors': daily_count,
-        'monthly_visitors': monthly_count
-    })
-    
- 
-@api_view(["POST"])
-def track_blog_visit(request, post_id):
-    try:
-        post = NewsPost.objects.get(id=post_id)
-        post.update_visit_counts()
-        return Response({
-            "message": "Visit recorded",
-            "daily_visitors": post.daily_visitors,
-            "monthly_visitors": post.monthly_visitors
-        })
-    except NewsPost.DoesNotExist:
-        return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-    
-@api_view(["POST"])
-def track_blog_visit(request, post_id):
-    try:
-        post = NewsPost.objects.get(id=post_id)
-        post.update_visit_counts()
-        return Response({
-            "message": "Visit recorded",
-            "daily_visitors": post.daily_visitors,
-            "monthly_visitors": post.monthly_visitors
-        })
-    except NewsPost.DoesNotExist:
-        return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_visit_stats(request, post_id):
@@ -377,3 +325,22 @@ def get_visit_stats(request, post_id):
         })
     except NewsPost.DoesNotExist:
         return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        
+
+    
+
+@api_view(["POST"])
+def track_blog_visit(request, post_id):
+    try:
+        post = NewsPost.objects.get(id=post_id)
+        post.update_visit_counts()  # Make sure this method exists in your model
+        return Response({
+            "message": "Visit recorded",
+            "daily_visitors": post.daily_visitors,
+            "monthly_visitors": post.monthly_visitors
+        })
+    except NewsPost.DoesNotExist:
+        return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+

@@ -136,6 +136,8 @@ class NewsPost(models.Model):
     )
     
     # ✅ Trending News Fields
+    
+    
     is_trending = models.BooleanField(default=False)
     trending_priority = models.PositiveSmallIntegerField(
         null=True, blank=True, unique=True,
@@ -157,7 +159,6 @@ class NewsPost(models.Model):
             self.daily_visitors += 1
             self.monthly_visitors += 1
         self.save()
-        
     def __str__(self):
         return self.header
     
