@@ -327,6 +327,33 @@ def get_visit_stats(request, post_id):
         return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
         
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def admin_dashboard_stats(request):
+    total_posts = NewsPost.objects.count()
+    edited_posts = NewsPost.objects.exclude(updated_by_employee=None).count()
+    total_ads = Advertisement.objects.count()
+    active_ads = Advertisement.objects.filter(is_active=True).count()
+
+    today = timezone.now().date()
+    one_month_ago = today - timedelta(days=30)
+
+    daily_visitors = NewsPost.objects.filter(last_visited__date=today).aggregate(
+        total=Sum("daily_visitors")
+    )["total"] or 0
+
+    monthly_visitors = NewsPost.objects.filter(last_visited__date__gte=one_month_ago).aggregate(
+        total=Sum("monthly_visitors")
+    )["total"] or 0
+
+    return Response({
+        "totalPosts": total_posts,
+        "editedPosts": edited_posts,
+        "totalAds": total_ads,
+        "activeAds": active_ads,
+        "dailyVisitors": daily_visitors,
+        "monthlyVisitors": monthly_visitors
+    })
 
     
 

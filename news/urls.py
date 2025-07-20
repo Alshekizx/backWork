@@ -13,7 +13,8 @@ from .views import (
     AdminLoginView,
     AdminListView,
     DeleteAdminView,
-    track_blog_visit
+    track_blog_visit,
+    admin_dashboard_stats
 )
 
 urlpatterns = [
@@ -35,4 +36,6 @@ urlpatterns = [
     path('admin/delete/<uuid:id>/', DeleteAdminView.as_view(), name='admin-delete'),
     
     path('blogs/<uuid:post_id>/visit/', track_blog_visit),
+    
+    path("admin/stats/", admin_dashboard_stats, name="dashboard-stats")
 ]
