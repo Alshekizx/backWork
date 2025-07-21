@@ -338,11 +338,11 @@ def admin_dashboard_stats(request):
     today = timezone.now().date()
     one_month_ago = today - timedelta(days=30)
 
-    daily_visitors = NewsPost.objects.filter(last_visited__date=today).aggregate(
+    daily_visitors = NewsPost.objects.filter(last_visited=today).aggregate(
         total=Sum("daily_visitors")
     )["total"] or 0
 
-    monthly_visitors = NewsPost.objects.filter(last_visited__date__gte=one_month_ago).aggregate(
+    monthly_visitors = NewsPost.objects.filter(last_visited__gte=one_month_ago).aggregate(
         total=Sum("monthly_visitors")
     )["total"] or 0
 
@@ -369,5 +369,7 @@ def track_blog_visit(request, post_id):
         })
     except NewsPost.DoesNotExist:
         return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 
