@@ -258,6 +258,7 @@ class AdminSignupView(generics.CreateAPIView):
             'token': token.key,
             'user_id': user.id,
             'name': f"{user.first_name} {user.last_name}",
+            'employee_id': user.employee_id,
             'user_type': user.user_type
         }, status=status.HTTP_201_CREATED)
 
@@ -278,7 +279,7 @@ class AdminLoginView(APIView):
                     'token': token.key,
                     'user_id': user.id,
                     'employee_id': user.employee_id,
-                    'first_name': user.first_name,
+                    'name': f"{user.first_name} {user.last_name}",
                     'user_type': user.user_type
                 })
             else:
