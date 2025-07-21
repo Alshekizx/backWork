@@ -118,6 +118,7 @@ class AdminAccountSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     employee_id = serializers.CharField()
     password = serializers.CharField()
+    user_type = serializers.ChoiceField(choices=['manager', 'employee'])
     
 class VisitStatsSerializer(serializers.Serializer):
     daily_visitors = serializers.IntegerField()

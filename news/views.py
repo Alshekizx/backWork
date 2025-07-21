@@ -270,9 +270,16 @@ class AdminLoginView(APIView):
 
         employee_id = serializer.validated_data['employee_id']
         password = serializer.validated_data['password']
+        user_type = serializer.validated_data['user_type']  # ✅ correctly from data
 
         try:
             user = AdminAccount.objects.get(employee_id=employee_id)
+
+            # ✅ First, check user type matches
+            if user.user_type != user_type:
+                return Response({'error': 'Invalid user type'}, status=403)
+
+            # ✅ Then check password
             if check_password(password, user.password):
                 token, _ = Token.objects.get_or_create(user=user.user)
                 return Response({
@@ -284,6 +291,7 @@ class AdminLoginView(APIView):
                 })
             else:
                 return Response({'error': 'Invalid password'}, status=400)
+
         except AdminAccount.DoesNotExist:
             return Response({'error': 'User not found'}, status=404)
 
