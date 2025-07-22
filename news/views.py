@@ -284,7 +284,7 @@ class AdminLoginView(APIView):
                 if user.user_type != user_type:
                     return Response({'error': 'Invalid user type'}, status=403)
 
-                if check_password(password, user.password):
+                if check_password(password, user.user.password):
                     token, _ = Token.objects.get_or_create(user=user.user)
                     return Response({
                         'token': token.key,
