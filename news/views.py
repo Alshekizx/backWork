@@ -248,22 +248,27 @@ class AdminSignupView(generics.CreateAPIView):
     serializer_class = AdminAccountSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            admin_account = serializer.save()
 
-        # Save user with default type 'admin' unless specified
-        user = serializer.save(user_type=request.data.get('user_type', 'admin'))
+            # Create or retrieve token
+            token, _ = Token.objects.get_or_create(user=admin_account.user)
 
-        # Create or retrieve token
-        token, _ = Token.objects.get_or_create(user=user.user)
+            return Response({
+                'token': token.key,
+                'employee_id': admin_account.employee_id,
+                'first_name': admin_account.first_name
+            }, status=status.HTTP_201_CREATED)
 
-        return Response({
-            'token': token.key,
-            'user_id': user.id,
-            'name': f"{user.first_name} {user.last_name}",
-            'employee_id': user.employee_id,
-            'user_type': user.user_type
-        }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error("Signup error: %s", str(e))
+            traceback.print_exc()
+            return Response(
+                {"error": "Internal server error", "detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 logger = logging.getLogger(__name__)
