@@ -123,3 +123,5 @@ class LoginSerializer(serializers.Serializer):
 class VisitStatsSerializer(serializers.Serializer):
     daily_visitors = serializers.IntegerField()
     monthly_visitors = serializers.IntegerField()
+
+
