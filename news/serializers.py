@@ -65,6 +65,7 @@ class AdminAccountSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True)
     date_of_birth = serializers.DateField(write_only=True)
     profile_image = serializers.ImageField(write_only=True, required=False)
+    
 
     class Meta:
         model = AdminAccount
@@ -72,6 +73,7 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             'id', 'employee_id', 'first_name', 'last_name', 'password',
             'email', 'date_of_birth', 'profile_image', 'user_type', 'manager'
         ]
+        
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -84,9 +86,9 @@ class AdminAccountSerializer(serializers.ModelSerializer):
         profile_image = validated_data.pop('profile_image', None)
         date_of_birth = validated_data.pop('date_of_birth')
         user_type = validated_data.get('user_type', 'employee')
-        manager = validated_data.get('manager')  # Optional
-
-        # Create the user
+        manager = validated_data.get('manager')
+        
+        # ✅ let create_user handle hashing
         user = CustomUser.objects.create_user(
             username=employee_id,
             email=email,
@@ -99,7 +101,6 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             user.profile_picture = profile_image
             user.save()
 
-        # Create admin account
         admin_account = AdminAccount.objects.create(
             user=user,
             employee_id=employee_id,
@@ -109,7 +110,7 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             date_of_birth=date_of_birth,
             profile_image=profile_image,
             user_type=user_type,
-            manager=manager if user_type == 'employee' else None  # Only employees have managers
+            manager=manager if user_type == 'employee' else None
         )
 
         return admin_account
