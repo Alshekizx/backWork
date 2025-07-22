@@ -53323,3 +53323,381 @@ Traceback (most recent call last):
   File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
     raise ImproperlyConfigured(
 django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+WARNING:root:No DATABASE_URL environment variable set, and so no databases setup
+⏭️ Skipped unrelated article: WHO condemns Israeli attacks on facilities in central Gaza
+⏭️ Skipped unrelated article: 'My friend died right in front of me': Student describes moment air force jet crashed into school
+⏭️ Skipped unrelated article: BBC sees fragile ceasefire holding in Syria's battle-scarred Suweida province
+⏭️ Skipped unrelated article: French cities impose curfews on children after drug violence
+⏭️ Skipped unrelated article: Australia's toxic algae bloom is 'natural disaster' - premier
+⏭️ Skipped unrelated article: Two Israelis questioned after attending Belgium's Tomorrowland festival
+Traceback (most recent call last):
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 22, in <module>
+    main()
+  File "/home/seyi/Documents/naijaTalk/backend/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/backend/news/management/commands/fetch_news.py", line 227, in handle
+    if NewsPost.objects.filter(share_link=entry.link).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 791, in as_sql
+    from_, f_params = self.get_from_clause()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1158, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 568, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/seyi/Documents/naijaTalk/venv/lib/python3.12/site-packages/django/db/backends/dummy/base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
