@@ -259,7 +259,8 @@ class AdminSignupView(generics.CreateAPIView):
             return Response({
                 'token': token.key,
                 'employee_id': admin_account.employee_id,
-                'first_name': admin_account.first_name
+                'first_name': admin_account.first_name,
+                "user_type": admin_account.user_type
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
@@ -289,7 +290,7 @@ class AdminLoginView(APIView):
                 if user.user_type != user_type:
                     return Response({'error': 'Invalid user type'}, status=403)
 
-                if check_password(password, user.user.password):
+                if user.user.check_password(password):
                     token, _ = Token.objects.get_or_create(user=user.user)
                     return Response({
                         'token': token.key,

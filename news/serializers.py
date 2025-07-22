@@ -4,6 +4,8 @@ from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .constants import MAIN_CATEGORIES
 from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
@@ -88,6 +90,12 @@ class AdminAccountSerializer(serializers.ModelSerializer):
         user_type = validated_data.get('user_type', 'employee')
         manager = validated_data.get('manager')
         
+        if CustomUser.objects.filter(username=employee_id).exists():
+            raise serializers.ValidationError({"employee_id": "Employee ID already exists"})
+
+        if CustomUser.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "Email already exists"})
+
         # ✅ let create_user handle hashing
         user = CustomUser.objects.create_user(
             username=employee_id,

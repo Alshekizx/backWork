@@ -75,7 +75,7 @@ class AdminAccount(models.Model):
     profile_image = models.URLField(blank=True, null=True)
     date_of_birth = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     # Nullable: only applicable for employees
     manager = models.ForeignKey(
         'self',
