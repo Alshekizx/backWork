@@ -18,6 +18,9 @@ from django.utils.timezone import now
 from datetime import timedelta
 
 from news import models
+import traceback
+import logging
+
 
 
 # ✅ List all posts, with optional search, category, date filtering
@@ -263,38 +266,43 @@ class AdminSignupView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
+logger = logging.getLogger(__name__)
+
 class AdminLoginView(APIView):
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        employee_id = serializer.validated_data['employee_id']
-        password = serializer.validated_data['password']
-        user_type = serializer.validated_data['user_type']  # ✅ correctly from data
-
         try:
-            user = AdminAccount.objects.get(employee_id=employee_id)
+            serializer = LoginSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
 
-            # ✅ First, check user type matches
-            if user.user_type != user_type:
-                return Response({'error': 'Invalid user type'}, status=403)
+            employee_id = serializer.validated_data['employee_id']
+            password = serializer.validated_data['password']
+            user_type = serializer.validated_data['user_type']
 
-            # ✅ Then check password
-            if check_password(password, user.password):
-                token, _ = Token.objects.get_or_create(user=user.user)
-                return Response({
-                    'token': token.key,
-                    'user_id': user.id,
-                    'employee_id': user.employee_id,
-                    'name': f"{user.first_name} {user.last_name}",
-                    'user_type': user.user_type
-                })
-            else:
-                return Response({'error': 'Invalid password'}, status=400)
+            try:
+                user = AdminAccount.objects.get(employee_id=employee_id)
 
-        except AdminAccount.DoesNotExist:
-            return Response({'error': 'User not found'}, status=404)
+                if user.user_type != user_type:
+                    return Response({'error': 'Invalid user type'}, status=403)
 
+                if check_password(password, user.password):
+                    token, _ = Token.objects.get_or_create(user=user.user)
+                    return Response({
+                        'token': token.key,
+                        'user_id': user.id,
+                        'employee_id': user.employee_id,
+                        'name': f"{user.first_name} {user.last_name}",
+                        'user_type': user.user_type
+                    })
+                else:
+                    return Response({'error': 'Invalid password'}, status=400)
+
+            except AdminAccount.DoesNotExist:
+                return Response({'error': 'User not found'}, status=404)
+
+        except Exception as e:
+            logger.error("Login error: %s", str(e))
+            traceback.print_exc()
+            return Response({'error': 'Internal server error', 'detail': str(e)}, status=500)
 
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
