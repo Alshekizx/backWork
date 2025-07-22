@@ -65,7 +65,7 @@ class AdminAccountSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True)
     date_of_birth = serializers.DateField(write_only=True)
     profile_image = serializers.ImageField(write_only=True, required=False)
-    
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = AdminAccount
