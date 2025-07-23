@@ -40,5 +40,6 @@ urlpatterns = [
     path('blogs/<uuid:post_id>/visit/', track_blog_visit),
     
     path("admin/stats/", admin_dashboard_stats, name="dashboard-stats"),
-    path('api/fetch-news/', fetch_news_view, name='fetch-news'),
+    path('fetch-news/', fetch_news_view, name='fetch-news'),
+
 ]
