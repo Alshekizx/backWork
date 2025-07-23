@@ -14,8 +14,10 @@ from .views import (
     AdminListView,
     DeleteAdminView,
     track_blog_visit,
-    admin_dashboard_stats
+    admin_dashboard_stats,
+    fetch_news_view
 )
+
 
 urlpatterns = [
     path('news/', NewsPostListView.as_view(), name='news-list'),
@@ -37,5 +39,6 @@ urlpatterns = [
     
     path('blogs/<uuid:post_id>/visit/', track_blog_visit),
     
-    path("admin/stats/", admin_dashboard_stats, name="dashboard-stats")
+    path("admin/stats/", admin_dashboard_stats, name="dashboard-stats"),
+    path('api/fetch-news/', fetch_news_view, name='fetch-news'),
 ]

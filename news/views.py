@@ -17,9 +17,14 @@ from rest_framework.response import Response
 from django.utils.timezone import now
 from datetime import timedelta
 
-from news import models
 import traceback
 import logging
+
+from django.core.management import call_command
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -396,4 +401,12 @@ def track_blog_visit(request, post_id):
 
 
 
-
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Optional: protect with auth
+def fetch_news_view(request):
+    try:
+        call_command('fetch_news')
+        return JsonResponse({'status': 'success', 'message': 'News fetched successfully'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
