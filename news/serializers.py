@@ -6,7 +6,7 @@ from .constants import MAIN_CATEGORIES
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-
+import datetime
 
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
     notification_preferences = serializers.ListField(
@@ -120,6 +120,17 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             user_type=user_type,
             manager=manager if user_type == 'employee' else None
         )
+        
+        def generate_employee_id():
+            today = datetime.date.today()
+            prefix = f"EMP-{today.strftime('%Y%m%d')}"
+            count = AdminAccount.objects.filter(employee_id__startswith=prefix).count() + 1
+            return f"{prefix}-{count:04d}"
+
+        # Inside create()
+        if validated_data.get("user_type") == "employee":
+            validated_data["employee_id"] = generate_employee_id()
+
 
         return admin_account
 
