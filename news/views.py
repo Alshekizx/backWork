@@ -1,3 +1,4 @@
+# file: news/view.py
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer
 
 from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement
@@ -248,6 +249,18 @@ class UserListView(generics.ListAPIView):
     permission_classes = [IsManager]
     queryset = CustomUser.objects.all()
     
+
+class EmployeeListView(generics.ListAPIView):
+    serializer_class = AdminAccountSerializer
+    permission_classes = [IsManager]
+
+    def get_queryset(self):
+        return AdminAccount.objects.filter(user_type='employee', manager=self.request.user.account_profile)
+    
+class DeleteEmployeeView(generics.DestroyAPIView):
+    queryset = AdminAccount.objects.filter(user_type='employee')
+    permission_classes = [IsManager]
+    lookup_field = 'id'
 
 class AdminSignupView(generics.CreateAPIView):
     serializer_class = AdminAccountSerializer

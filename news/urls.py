@@ -3,6 +3,9 @@ from .views import (
     AdvertisementCreateView,
     AdvertisementDetailView,
     AdvertisementListView,
+    CreateEmployeeView,
+    DeleteEmployeeView,
+    EmployeeListView,
     NewsPostListView,
     NewsPostDetailView,
     set_top_news,
@@ -41,5 +44,8 @@ urlpatterns = [
     
     path("admin/stats/", admin_dashboard_stats, name="dashboard-stats"),
     path('fetch-news/', fetch_news_view, name='fetch-news'),
+    path('employees/', EmployeeListView.as_view(), name='employee-list'),
+    path('employees/create/', CreateEmployeeView.as_view(), name='employee-create'),
+    path('employees/delete/<uuid:id>/', DeleteEmployeeView.as_view(), name='employee-delete'),
 
 ]
