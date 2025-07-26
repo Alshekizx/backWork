@@ -8,6 +8,7 @@ from .views import (
     EmployeeListView,
     NewsPostListView,
     NewsPostDetailView,
+    check_username_availability,
     set_top_news,
     list_top_news,
     set_trending_news,
@@ -47,5 +48,6 @@ urlpatterns = [
     path('employees/', EmployeeListView.as_view(), name='employee-list'),
     path('employees/create/', CreateEmployeeView.as_view(), name='employee-create'),
     path('employees/delete/<uuid:id>/', DeleteEmployeeView.as_view(), name='employee-delete'),
-
+    
+    path("auth/check-username/", check_username_availability),
 ]

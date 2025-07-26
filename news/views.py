@@ -2,7 +2,7 @@
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer
 
 from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement
-from rest_framework.response import Response
+
 from rest_framework import status,generics
 from django.db.models import Sum
 from django.utils import timezone
@@ -28,6 +28,33 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
+from django.contrib.auth import get_user_model
+import random
+import string
+
+User = get_user_model()
+
+@api_view(['GET'])
+def check_username_availability(request):
+    username = request.GET.get("username", "")
+    if not username:
+        return Response({"available": False, "error": "No username provided"}, status=400)
+
+    exists = User.objects.filter(username__iexact=username).exists()
+
+    if not exists:
+        return Response({"available": True})
+
+    # Suggest random usernames
+    suggestions = []
+    for i in range(3):
+        rand_suffix = ''.join(random.choices(string.digits, k=3))
+        suggestions.append(f"{username}{rand_suffix}")
+
+    return Response({
+        "available": False,
+        "suggestions": suggestions
+    })
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
