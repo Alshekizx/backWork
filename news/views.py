@@ -31,6 +31,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 import random
 import string
+from django.views.decorators.http import require_GET
 
 User = get_user_model()
 
@@ -55,6 +56,11 @@ def check_username_availability(request):
         "available": False,
         "suggestions": suggestions
     })
+
+def check_email_availability(request):
+    email = request.GET.get("email", "").strip()
+    exists = User.objects.filter(email__iexact=email).exists()
+    return JsonResponse({"available": not exists})
 
 # ✅ List all posts, with optional search, category, date filtering
 class NewsPostListView(generics.ListCreateAPIView):
