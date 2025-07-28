@@ -102,6 +102,7 @@ class NewsPost(models.Model):
     comments = models.ManyToManyField(Comment, blank=True, related_name='news_posts')
     views = models.PositiveIntegerField(default=0)
     share_link = models.URLField()
+    video_link = models.URLField(blank=True, null=True, help_text="Optional video link for the news post.")
     main_category = models.CharField(max_length=50, choices=MAIN_CATEGORIES)
     sub_category = models.CharField(max_length=100, blank=True)
    

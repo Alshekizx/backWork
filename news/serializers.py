@@ -49,12 +49,15 @@ class NewsPostSerializer(serializers.ModelSerializer):
     share_Link = serializers.SerializerMethodField(read_only=True)
 
     def get_share_Link(self, obj):
-        return obj.share_link
+        request = self.context.get('request')
+        domain = request.build_absolute_uri('/') if request else 'https://naijatalk.com/'
+        return f"{domain.rstrip('/')}/view/blogDetails/{obj.id}"
 
     class Meta:
         model = NewsPost
         fields = '__all__'
         read_only_fields = ['share_Link']
+
 
 
 class AdvertisementSerializer(serializers.ModelSerializer):
