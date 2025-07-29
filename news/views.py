@@ -1,7 +1,11 @@
 # file: news/view.py
-from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer
+from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer
 
-from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement
+from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription
+
+from django.core.mail import send_mail
+from django.conf import settings
+from .emails import send_newsletter
 
 from rest_framework import status,generics
 from django.db.models import Sum
@@ -465,3 +469,54 @@ def fetch_news_view(request):
         return JsonResponse({'status': 'success', 'message': 'News fetched successfully'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+class ContactUsView(generics.CreateAPIView):
+    serializer_class = ContactUsSerializer
+    queryset = ContactUs.objects.all()
+
+
+class NewsLetterSubscriptionView(generics.CreateAPIView):
+    serializer_class = NewsLetterSubscriptionSerializer
+    queryset = NewsLetterSubscription.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        if NewsLetterSubscription.objects.filter(email=email).exists():
+            return Response({"detail": "Email already subscribed."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Save email
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # Send confirmation to user
+        send_mail(
+            subject="Newsletter Subscription Confirmed",
+            message="Thank you for subscribing to our newsletter.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=True,
+        )
+
+        # Notify admin
+        send_mail(
+            subject="New Newsletter Subscription",
+            message=f"New email subscribed to newsletter: {email}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.ADMIN_EMAIL],
+            fail_silently=True,
+        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+class SendNewsletterView(APIView):
+    def post(self, request):
+        subject = request.data.get('subject')
+        message = request.data.get('message')
+
+        if not subject or not message:
+            return Response({'detail': 'Subject and message are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        send_newsletter(subject, message)
+        return Response({'detail': 'Newsletter sent successfully.'}, status=status.HTTP_200_OK)

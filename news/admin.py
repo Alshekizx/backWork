@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import NewsPost, Comment, Source, CustomUser
 from django.contrib.auth.admin import UserAdmin
+from .models import ContactUs, NewsLetterSubscription
 
 @admin.register(NewsPost)
 class NewsPostAdmin(admin.ModelAdmin):
@@ -11,3 +12,6 @@ admin.site.register(Comment)
 admin.site.register(Source)
 
 admin.site.register(CustomUser, UserAdmin)
+
+admin.site.register(ContactUs)
+admin.site.register(NewsLetterSubscription)

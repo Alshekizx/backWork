@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount
+from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .constants import MAIN_CATEGORIES
@@ -148,3 +148,13 @@ class VisitStatsSerializer(serializers.Serializer):
     monthly_visitors = serializers.IntegerField()
 
 
+class ContactUsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactUs
+        fields = ['id', 'name', 'email', 'message']
+
+
+class NewsLetterSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsLetterSubscription
+        fields = ['id', 'email', 'date_subscribed']

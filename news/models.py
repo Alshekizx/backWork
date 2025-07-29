@@ -5,6 +5,10 @@ import uuid
 from .constants import MAIN_CATEGORIES
 from django.utils import timezone 
 from django.contrib.auth.models import BaseUserManager
+from django.core.mail import send_mail
+from django.conf import settings
+
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -216,3 +220,44 @@ class Advertisement(models.Model):
 
 
 
+class ContactUs(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        # Add email to newsletter subscription
+        if not NewsLetterSubscription.objects.filter(email=self.email).exists():
+            NewsLetterSubscription.objects.create(email=self.email)
+
+        # Send confirmation to the user
+        send_mail(
+            subject="Thanks for contacting us!",
+            message="We received your message and will get back to you shortly.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[self.email],
+            fail_silently=True,
+        )
+
+        # Notify admin
+        send_mail(
+            subject="New Contact Message Received",
+            message=f"Name: {self.name}\nEmail: {self.email}\n\nMessage:\n{self.message}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.ADMIN_EMAIL],  # Define this in settings.py
+            fail_silently=True,
+        )
+
+    def __str__(self):
+        return f"{self.name} - {self.email}"
+
+
+class NewsLetterSubscription(models.Model):
+    email = models.EmailField(unique=True)
+    date_subscribed = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

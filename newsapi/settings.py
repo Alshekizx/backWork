@@ -164,3 +164,14 @@ DJOSER = {
 CSRF_TRUSTED_ORIGINS = [
     "https://naijatalkbackend.onrender.com",
 ]
+
+
+
+DEFAULT_FROM_EMAIL = "your-sender@example.com"
+ADMIN_EMAIL = "seyiduncan40@gmail.com"  # Replace with your email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yourprovider.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "your-sender@example.com"
+EMAIL_HOST_PASSWORD = "yourpassword"

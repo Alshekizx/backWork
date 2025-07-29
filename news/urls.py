@@ -8,6 +8,7 @@ from .views import (
     EmployeeListView,
     NewsPostListView,
     NewsPostDetailView,
+    SendNewsletterView,
     check_email_availability,
     check_username_availability,
     set_top_news,
@@ -20,7 +21,9 @@ from .views import (
     DeleteAdminView,
     track_blog_visit,
     admin_dashboard_stats,
-    fetch_news_view
+    fetch_news_view,
+    ContactUsView, 
+    NewsLetterSubscriptionView
 )
 
 
@@ -52,4 +55,9 @@ urlpatterns = [
     
     path("auth/check-username/", check_username_availability),
     path("auth/check-email/", check_email_availability),
+    
+    path('contact/', ContactUsView.as_view(), name='contact-us'),
+    path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
+     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
+
 ]
