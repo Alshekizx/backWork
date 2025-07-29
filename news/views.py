@@ -63,6 +63,8 @@ def check_email_availability(request):
     return JsonResponse({"available": not exists})
 
 # ✅ List all posts, with optional search, category, date filtering
+# news/views.py
+
 class NewsPostListView(generics.ListCreateAPIView):
     serializer_class = NewsPostSerializer
     queryset = NewsPost.objects.all().order_by("-date", "-time")
@@ -73,6 +75,7 @@ class NewsPostListView(generics.ListCreateAPIView):
         category = self.request.query_params.get("category")
         date = self.request.query_params.get("date")
         search = self.request.query_params.get("search")
+        is_posted = self.request.query_params.get("is_posted")
 
         if category and category != "All":
             queryset = queryset.filter(main_category__iexact=category)
@@ -80,6 +83,12 @@ class NewsPostListView(generics.ListCreateAPIView):
             queryset = queryset.filter(date=date)
         if search:
             queryset = queryset.filter(header__icontains=search)
+
+        if is_posted is not None:
+            if is_posted.lower() == "true":
+                queryset = queryset.filter(is_posted=True)
+            elif is_posted.lower() == "false":
+                queryset = queryset.filter(is_posted=False)
 
         return queryset
 
