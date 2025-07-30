@@ -58,6 +58,6 @@ urlpatterns = [
     
     path('contact/', ContactUsView.as_view(), name='contact-us'),
     path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
-     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
+    path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
 
 ]
