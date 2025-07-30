@@ -151,7 +151,7 @@ class VisitStatsSerializer(serializers.Serializer):
 class ContactUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactUs
-        fields = ['id', 'name', 'email', 'message']
+        fields = ['id', 'name', 'email', 'message', 'seen']
 
 
 class NewsLetterSubscriptionSerializer(serializers.ModelSerializer):

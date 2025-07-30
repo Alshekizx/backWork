@@ -9,6 +9,7 @@ from .views import (
     NewsPostListView,
     NewsPostDetailView,
     SendNewsletterView,
+    ToggleContactSeenStatus,
     check_email_availability,
     check_username_availability,
     set_top_news,
@@ -59,5 +60,5 @@ urlpatterns = [
     path('contact/', ContactUsView.as_view(), name='contact-us'),
     path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
-
+    path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
 ]

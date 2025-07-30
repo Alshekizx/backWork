@@ -225,6 +225,7 @@ class ContactUs(models.Model):
     email = models.EmailField()
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)  # 👈 Add this field
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

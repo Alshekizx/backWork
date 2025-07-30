@@ -520,3 +520,14 @@ class SendNewsletterView(APIView):
 
         send_newsletter(subject, message)
         return Response({'detail': 'Newsletter sent successfully.'}, status=status.HTTP_200_OK)
+    
+    
+class ToggleContactSeenStatus(APIView):
+    def patch(self, request, pk):
+        try:
+            contact = ContactUs.objects.get(pk=pk)
+            contact.seen = not contact.seen
+            contact.save()
+            return Response({'seen': contact.seen}, status=status.HTTP_200_OK)
+        except ContactUs.DoesNotExist:
+            return Response({'detail': 'Contact not found'}, status=status.HTTP_404_NOT_FOUND)
