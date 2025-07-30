@@ -13,5 +13,8 @@ admin.site.register(Source)
 
 admin.site.register(CustomUser, UserAdmin)
 
-admin.site.register(ContactUs)
+@admin.register(ContactUs)
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'created_at')
+    search_fields = ('name', 'email', 'message')
 admin.site.register(NewsLetterSubscription)
