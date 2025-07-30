@@ -166,12 +166,10 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
+DEFAULT_FROM_EMAIL = "no-reply@naijatalk.com"  # Must match your verified sender domain on SendGrid
+ADMIN_EMAIL = "seyiduncan40@gmail.com"
 
-DEFAULT_FROM_EMAIL = "your-sender@example.com"
-ADMIN_EMAIL = "seyiduncan40@gmail.com"  # Replace with your email
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.yourprovider.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "your-sender@example.com"
-EMAIL_HOST_PASSWORD = "yourpassword"
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+SENDGRID_ECHO_TO_STDOUT = True
