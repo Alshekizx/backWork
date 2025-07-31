@@ -1,7 +1,7 @@
 # file: news/view.py
-from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer
+from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsletterHistorySerializer
 
-from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription
+from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsletterHistory
 
 from django.core.mail import send_mail
 from django.conf import settings
@@ -531,3 +531,7 @@ class ToggleContactSeenStatus(APIView):
             return Response({'seen': contact.seen}, status=status.HTTP_200_OK)
         except ContactUs.DoesNotExist:
             return Response({'detail': 'Contact not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+class NewsletterHistoryListView(generics.ListAPIView):
+    queryset = NewsletterHistory.objects.all().order_by('-sent_at')
+    serializer_class = NewsletterHistorySerializer

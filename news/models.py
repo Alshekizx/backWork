@@ -262,3 +262,12 @@ class NewsLetterSubscription(models.Model):
 
     def __str__(self):
         return self.email
+    
+class NewsletterHistory(models.Model):
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+    recipients = models.JSONField()  # store list of emails
+
+    def __str__(self):
+        return f"{self.subject} ({self.sent_at})"

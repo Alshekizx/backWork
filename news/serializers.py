@@ -158,3 +158,8 @@ class NewsLetterSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsLetterSubscription
         fields = ['id', 'email', 'date_subscribed']
+        
+class NewsletterHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsletterHistory
+        fields = ['id', 'subject', 'sent_at', 'recipients']

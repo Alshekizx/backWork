@@ -8,6 +8,7 @@ from .views import (
     EmployeeListView,
     NewsPostListView,
     NewsPostDetailView,
+    NewsletterHistoryListView,
     SendNewsletterView,
     ToggleContactSeenStatus,
     check_email_availability,
@@ -61,4 +62,6 @@ urlpatterns = [
     path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
     path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
+    path('newsletter/history/', NewsletterHistoryListView.as_view(), name='newsletter-history'),
+
 ]
