@@ -3,6 +3,8 @@ from .views import (
     AdvertisementCreateView,
     AdvertisementDetailView,
     AdvertisementListView,
+    ContactUsDeleteView,
+    ContactUsListCreateView,
     CreateEmployeeView,
     DeleteEmployeeView,
     EmployeeListView,
@@ -24,7 +26,6 @@ from .views import (
     track_blog_visit,
     admin_dashboard_stats,
     fetch_news_view,
-    ContactUsView, 
     NewsLetterSubscriptionView
 )
 
@@ -58,10 +59,12 @@ urlpatterns = [
     path("auth/check-username/", check_username_availability),
     path("auth/check-email/", check_email_availability),
     
-    path('contact/', ContactUsView.as_view(), name='contact-us'),
     path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
+    path('contact/', ContactUsListCreateView.as_view(), name='contact-list-create'),
+    path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),    
     path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
     path('newsletter/history/', NewsletterHistoryListView.as_view(), name='newsletter-history'),
 
 ]
+

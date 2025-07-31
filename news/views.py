@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .emails import send_newsletter
 
-from rest_framework import status,generics
+from rest_framework import status,generics, viewsets
 from django.db.models import Sum
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
@@ -474,7 +474,15 @@ def fetch_news_view(request):
 class ContactUsView(generics.CreateAPIView):
     serializer_class = ContactUsSerializer
     queryset = ContactUs.objects.all()
+    
+class ContactUsListCreateView(generics.ListCreateAPIView):
+    queryset = ContactUs.objects.all().order_by('-created_at')
+    serializer_class = ContactUsSerializer
 
+class ContactUsDeleteView(generics.DestroyAPIView):
+    queryset = ContactUs.objects.all()
+    serializer_class = ContactUsSerializer
+    lookup_field = 'pk'
 
 class NewsLetterSubscriptionView(generics.CreateAPIView):
     serializer_class = NewsLetterSubscriptionSerializer
