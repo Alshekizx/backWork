@@ -13,7 +13,7 @@ from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from rest_framework.permissions import BasePermission,IsAuthenticated
+from rest_framework.permissions import BasePermission,IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import check_password
@@ -484,9 +484,14 @@ class ContactUsDeleteView(generics.DestroyAPIView):
     serializer_class = ContactUsSerializer
     lookup_field = 'pk'
 
-class NewsLetterSubscriptionView(generics.CreateAPIView):
+class NewsLetterSubscriptionView(generics.ListCreateAPIView):
+    queryset = NewsLetterSubscription.objects.all().order_by('-date_subscribed')
     serializer_class = NewsLetterSubscriptionSerializer
-    queryset = NewsLetterSubscription.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAdminUser()]
+        return []
 
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
@@ -517,7 +522,8 @@ class NewsLetterSubscriptionView(generics.CreateAPIView):
         )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
+
 class SendNewsletterView(APIView):
     def post(self, request):
         subject = request.data.get('subject')
