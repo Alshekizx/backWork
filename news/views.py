@@ -487,10 +487,11 @@ class ContactUsDeleteView(generics.DestroyAPIView):
 class NewsLetterSubscriptionView(generics.ListCreateAPIView):
     queryset = NewsLetterSubscription.objects.all().order_by('-date_subscribed')
     serializer_class = NewsLetterSubscriptionSerializer
-
+    permission_classes = [IsAuthenticated]
+    
     def get_permissions(self):
         if self.request.method == 'GET':
-            return [IsAdminUser()]
+            return [IsAuthenticated()]
         return []
 
     def post(self, request, *args, **kwargs):
