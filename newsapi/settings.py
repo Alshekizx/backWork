@@ -138,9 +138,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://naijatalk.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
+    "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
     "https://naijatalk.vercel.app",
 ]
