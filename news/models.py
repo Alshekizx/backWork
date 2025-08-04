@@ -178,8 +178,9 @@ class Advertisement(models.Model):
 
     AD_SPACES = [
         ('home-top', 'Home Page - Top Banner'),
-        ('blogview-top', 'Blog View - Top'),
-        ('blogview-bottom', 'Blog View - Bottom'),
+        ('blogview-left', 'Blog View - Left'),
+        ('blogview-right-top', 'Blog View - Right - Top'),
+        ('blogview-right-bottom', 'Blog View - Right - Bottom'),
         ('blogselect-sidebar', 'Blog Select - Sidebar'),
         ('blogselect-inline', 'Blog Select - Inline'),
     ]
