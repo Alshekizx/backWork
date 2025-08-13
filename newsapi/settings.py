@@ -139,12 +139,16 @@ CORS_ALLOWED_ORIGINS = [
     "https://naijatalk.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
     "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
+    "https://www.naijatalk.xyz",
+    "https://naijatalk.xyz"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
-    "https://naijatalk.vercel.app",
+    "https://naijatalk.vercel.app"
+    "https://www.naijatalk.xyz",
+    "https://naijatalk.xyz"
 ]
 # Auth config
 REST_FRAMEWORK = {
