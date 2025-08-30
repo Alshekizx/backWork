@@ -1,3 +1,4 @@
+#file : news/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
@@ -165,7 +166,32 @@ class NewsPost(models.Model):
         self.save()
     def __str__(self):
         return self.header
-    
+
+class NewsCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    keywords = models.TextField(
+        help_text="Comma-separated keywords to detect category relevance"
+    )
+
+    def keyword_list(self):
+        return [k.strip().lower() for k in self.keywords.split(",") if k.strip()]
+
+    def __str__(self):
+        return self.name
+
+
+class NewsSource(models.Model):
+    name = models.CharField(max_length=255)
+    website = models.URLField()
+    rss = models.URLField()
+    main_category = models.ForeignKey(
+        NewsCategory,
+        on_delete=models.CASCADE,
+        related_name="sources"
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.main_category.name})"
 
 
 class Advertisement(models.Model):

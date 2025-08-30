@@ -1,7 +1,7 @@
 # file: news/view.py
-from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsletterHistorySerializer
+from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsCategorySerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsSourceSerializer, NewsletterHistorySerializer
 
-from .models import AdminAccount, Advertisement, CustomUser, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsletterHistory
+from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory
 
 from django.core.mail import send_mail
 from django.conf import settings
@@ -102,6 +102,13 @@ class NewsPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NewsPostSerializer
     lookup_field = 'id'
 
+class NewsCategoryViewSet(viewsets.ModelViewSet):
+    queryset = NewsCategory.objects.all()
+    serializer_class = NewsCategorySerializer
+
+class NewsSourceViewSet(viewsets.ModelViewSet):
+    queryset = NewsSource.objects.all()
+    serializer_class = NewsSourceSerializer
 
 # ✅ Comment creation
 class CommentCreateView(generics.CreateAPIView):

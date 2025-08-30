@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory
+from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .constants import MAIN_CATEGORIES
@@ -58,6 +58,15 @@ class NewsPostSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['share_Link']
 
+class NewsCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsCategory
+        fields = "__all__"
+
+class NewsSourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsSource
+        fields = "__all__"
 
 
 class AdvertisementSerializer(serializers.ModelSerializer):
