@@ -1,37 +1,17 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
-    AdvertisementCreateView,
-    AdvertisementDetailView,
-    AdvertisementListView,
-    ContactUsDeleteView,
-    ContactUsListCreateView,
-    CreateEmployeeView,
-    DeleteEmployeeView,
-    EmployeeListView,
-    NewsCategoryViewSet,
-    NewsPostListView,
-    NewsPostDetailView,
-    NewsSourceViewSet,
-    NewsletterHistoryListView,
-    SendNewsletterView,
-    ToggleContactSeenStatus,
-    check_email_availability,
-    check_username_availability,
-    set_top_news,
-    list_top_news,
-    set_trending_news,
-    list_trending_news,
-    AdminSignupView,
-    AdminLoginView,
-    AdminListView,
-    DeleteAdminView,
-    track_blog_visit,
-    admin_dashboard_stats,
-    fetch_news_view,
+    AdvertisementCreateView, AdvertisementDetailView, AdvertisementListView,
+    ContactUsDeleteView, ContactUsListCreateView,
+    CreateEmployeeView, DeleteEmployeeView, EmployeeListView,
+    NewsCategoryViewSet, NewsPostListView, NewsPostDetailView,
+    NewsSourceViewSet, NewsletterHistoryListView, SendNewsletterView,
+    ToggleContactSeenStatus, check_email_availability, check_username_availability,
+    set_top_news, list_top_news, set_trending_news, list_trending_news,
+    AdminSignupView, AdminLoginView, AdminListView, DeleteAdminView,
+    track_blog_visit, admin_dashboard_stats, fetch_news_view,
     NewsLetterSubscriptionView
 )
-from rest_framework.routers import DefaultRouter
-
 
 router = DefaultRouter()
 router.register("categories", NewsCategoryViewSet, basename="category")
@@ -49,28 +29,32 @@ urlpatterns = [
     path('ads/create/', AdvertisementCreateView.as_view(), name='ads-create'),
     path('ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail'),
 
-    # Admin (Manager + Employee) Management
+    # Admin Management
     path('admin/signup/', AdminSignupView.as_view(), name='admin-signup'),
     path('admin/login/', AdminLoginView.as_view(), name='admin-login'),
     path('admin/list/', AdminListView.as_view(), name='admin-list'),
     path('admin/delete/<uuid:id>/', DeleteAdminView.as_view(), name='admin-delete'),
-    
+
     path('blogs/<uuid:post_id>/visit/', track_blog_visit),
-    
     path("admin/stats/", admin_dashboard_stats, name="dashboard-stats"),
+
     path('fetch-news/', fetch_news_view, name='fetch-news'),
+
     path('employees/', EmployeeListView.as_view(), name='employee-list'),
     path('employees/create/', CreateEmployeeView.as_view(), name='employee-create'),
     path('employees/delete/<uuid:id>/', DeleteEmployeeView.as_view(), name='employee-delete'),
-    
+
     path("auth/check-username/", check_username_availability),
     path("auth/check-email/", check_email_availability),
-    
+
     path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
-    path('contact/', ContactUsListCreateView.as_view(), name='contact-list-create'),
-    path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),    
-    path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
     path('newsletter/history/', NewsletterHistoryListView.as_view(), name='newsletter-history'),
+
+    path('contact/', ContactUsListCreateView.as_view(), name='contact-list-create'),
+    path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),
+    path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
+
+    # ✅ Router endpoints (categories, sources)
     path("", include(router.urls)),
 ]
