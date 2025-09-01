@@ -146,9 +146,10 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
-    "https://naijatalk.vercel.app"
+    "https://naijatalk.vercel.app",
     "https://www.naijatalk.xyz",
-    "https://naijatalk.xyz"
+    "https://naijatalk.xyz",
+    "https://naijatalkbackend.onrender.com",
 ]
 # Auth config
 REST_FRAMEWORK = {
@@ -167,9 +168,7 @@ DJOSER = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://naijatalkbackend.onrender.com",
-]
+
 
 
 DEFAULT_FROM_EMAIL = "no-reply@naijatalk.com"  # Must match your verified sender domain on SendGrid
