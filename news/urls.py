@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     AdvertisementCreateView,
     AdvertisementDetailView,
@@ -8,8 +8,10 @@ from .views import (
     CreateEmployeeView,
     DeleteEmployeeView,
     EmployeeListView,
+    NewsCategoryViewSet,
     NewsPostListView,
     NewsPostDetailView,
+    NewsSourceViewSet,
     NewsletterHistoryListView,
     SendNewsletterView,
     ToggleContactSeenStatus,
@@ -28,7 +30,12 @@ from .views import (
     fetch_news_view,
     NewsLetterSubscriptionView
 )
+from rest_framework.routers import DefaultRouter
 
+
+router = DefaultRouter()
+router.register("categories", NewsCategoryViewSet, basename="category")
+router.register("sources", NewsSourceViewSet, basename="source")
 
 urlpatterns = [
     path('news/', NewsPostListView.as_view(), name='news-list'),
@@ -65,6 +72,5 @@ urlpatterns = [
     path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),    
     path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
     path('newsletter/history/', NewsletterHistoryListView.as_view(), name='newsletter-history'),
-
+    path("", include(router.urls)),
 ]
-
