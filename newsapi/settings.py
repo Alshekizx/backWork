@@ -144,6 +144,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://naijatalk.xyz"
 ]
 
+CORS_ALLOW_CREDENTIALS = True  # ✅ Add this
+
 CSRF_TRUSTED_ORIGINS = [
     "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
