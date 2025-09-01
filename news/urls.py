@@ -18,6 +18,8 @@ router.register("categories", NewsCategoryViewSet, basename="category")
 router.register("sources", NewsSourceViewSet, basename="source")
 
 urlpatterns = [
+       # ✅ Router endpoints (categories, sources)
+    path("", include(router.urls)),
     path('news/', NewsPostListView.as_view(), name='news-list'),
     path('news/<uuid:id>/', NewsPostDetailView.as_view(), name='news-detail'),
     path('top-news/set/', set_top_news),
@@ -55,6 +57,5 @@ urlpatterns = [
     path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),
     path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
 
-    # ✅ Router endpoints (categories, sources)
-    path("", include(router.urls)),
+ 
 ]
