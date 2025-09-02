@@ -14,8 +14,8 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register("categories", NewsCategoryViewSet, basename="category")
-router.register("sources", NewsSourceViewSet, basename="source")
+router.register(r'categories', NewsCategoryViewSet, basename='categories')
+router.register(r'sources', NewsSourceViewSet, basename='sources')
 
 urlpatterns = [
        # ✅ Router endpoints (categories, sources)
