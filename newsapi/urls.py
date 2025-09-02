@@ -8,7 +8,7 @@ from news.views import CommentCreateView, NewsPostDetailView, NewsPostListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('news.urls')),
+    path("api/", include("news.urls")),
     path("api/comments/", CommentCreateView.as_view(), name="create-comment"),
 
     # Auth endpoints
