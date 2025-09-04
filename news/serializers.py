@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from newsapi import settings
 from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
@@ -47,10 +49,17 @@ class CommentSerializer(serializers.ModelSerializer):
 class NewsPostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     share_Link = serializers.SerializerMethodField(read_only=True)
+    main_category = serializers.SlugRelatedField(
+        slug_field="name",
+        queryset=NewsCategory.objects.all()
+    )
 
     def get_share_Link(self, obj):
         request = self.context.get('request')
-        domain = request.build_absolute_uri('/') if request else 'https://naijatalk.com/'
+        if request:
+            domain = request.build_absolute_uri('/')  # backend-aware domain
+        else:
+            domain = settings.FRONTEND_DOMAIN         # fallback to constant
         return f"{domain.rstrip('/')}/view/blogDetails/{obj.id}"
 
     class Meta:

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    AdvertisementCreateView, AdvertisementDetailView, AdvertisementListView,
+    AdvertisementCreateView, AdvertisementDetailView, AdvertisementListView, CommentCreateView,
     ContactUsDeleteView, ContactUsListCreateView,
     CreateEmployeeView, DeleteEmployeeView, EmployeeListView,
     NewsCategoryViewSet, NewsPostListView, NewsPostDetailView,
@@ -28,13 +28,14 @@ urlpatterns = [
 
     path('ads/', AdvertisementListView.as_view(), name='ads-list'),
     path('ads/create/', AdvertisementCreateView.as_view(), name='ads-create'),
-    path('ads/<int:id>/', AdvertisementDetailView.as_view(), name='ad-detail'),
+    path('ads/<uuid:id>/', AdvertisementDetailView.as_view(), name='ad-detail'),
 
     # Admin Management
     path('admin/signup/', AdminSignupView.as_view(), name='admin-signup'),
     path('admin/login/', AdminLoginView.as_view(), name='admin-login'),
     path('admin/list/', AdminListView.as_view(), name='admin-list'),
     path('admin/delete/<uuid:id>/', DeleteAdminView.as_view(), name='admin-delete'),
+    path("comments/", CommentCreateView.as_view(), name="create-comment"),
 
     path('blogs/<uuid:post_id>/visit/', track_blog_visit),
     path("admin/stats/", admin_dashboard_stats, name="dashboard-stats"),

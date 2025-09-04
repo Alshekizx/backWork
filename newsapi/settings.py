@@ -31,7 +31,10 @@ ALLOWED_HOSTS = [
     "naijatalkbackend.onrender.com",
 ]
 
+FRONTEND_DOMAIN = "https://naijatalk.xyz"
+
 # Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

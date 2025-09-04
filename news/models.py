@@ -35,7 +35,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
     subscribe_newsletter = models.BooleanField(default=False)
-    notification_preferences = MultiSelectField(choices=MAIN_CATEGORIES, blank=True)
+    notification_preferences = models.ManyToManyField("NewsCategory", blank=True, related_name="subscribed_users")
     post_read_history = models.ManyToManyField("NewsPost", blank=True, related_name="read_by_users")
     comment_history = models.ManyToManyField("Comment", blank=True, related_name="commented_by_users")
     profile_picture = models.URLField(blank=True, null=True)
@@ -108,7 +108,13 @@ class NewsPost(models.Model):
     views = models.PositiveIntegerField(default=0)
     share_link = models.URLField()
     video_link = models.URLField(blank=True, null=True, help_text="Optional video link for the news post.")
-    main_category = models.CharField(max_length=50, choices=MAIN_CATEGORIES)
+    
+    # ✅ Replace MAIN_CATEGORIES with ForeignKey
+    main_category = models.ForeignKey(
+        "NewsCategory",
+        on_delete=models.CASCADE,
+        related_name="news_posts"
+    )
     sub_category = models.CharField(max_length=100, blank=True)
    
     daily_visitors = models.IntegerField(default=0)
@@ -140,17 +146,14 @@ class NewsPost(models.Model):
         help_text="Priority from 1 (highest) to 20 (lowest) for top news."
     )
     
-    # ✅ Trending News Fields
-    
-    
     is_trending = models.BooleanField(default=False)
     trending_priority = models.PositiveSmallIntegerField(
         null=True, blank=True, unique=True,
         help_text="Priority from 1 (highest) to 30 (lowest) for trending news."
     )
-    # ✅ New Field
     
     is_posted = models.BooleanField(default=False, help_text="Mark as posted or unposted.")
+
     def update_visit_counts(self):
         today = timezone.now().date()
         if self.last_visited != today:
@@ -164,8 +167,10 @@ class NewsPost(models.Model):
             self.daily_visitors += 1
             self.monthly_visitors += 1
         self.save()
+
     def __str__(self):
         return self.header
+
 
 class NewsCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -210,7 +215,7 @@ class Advertisement(models.Model):
         ('blogselect-sidebar', 'Blog Select - Sidebar'),
         ('blogselect-inline', 'Blog Select - Inline'),
     ]
-    id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
     ad_type = models.CharField(max_length=10, choices=AD_TYPES)
     ad_space = models.CharField(max_length=50, choices=AD_SPACES)
@@ -218,7 +223,12 @@ class Advertisement(models.Model):
     ad_text = models.TextField(blank=True, null=True)
     html_code = models.TextField(blank=True, null=True)
     redirect_url = models.URLField(blank=True, null=True)
-    category = models.CharField(max_length=100, choices=MAIN_CATEGORIES)
+    category = models.ForeignKey(
+    "NewsCategory",
+    on_delete=models.CASCADE,
+    related_name="ads"
+)
+
     is_active = models.BooleanField(default=True)
     start_date = models.DateField()
     end_date = models.DateField()

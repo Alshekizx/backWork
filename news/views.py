@@ -1,4 +1,5 @@
 # file: news/view.py
+from unicodedata import category
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsCategorySerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsSourceSerializer, NewsletterHistorySerializer
 
 from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory
@@ -82,7 +83,7 @@ class NewsPostListView(generics.ListCreateAPIView):
         is_posted = self.request.query_params.get("is_posted")
 
         if category and category != "All":
-            queryset = queryset.filter(main_category__iexact=category)
+            queryset = queryset.filter(main_category__name__iexact=category)
         if date:
             queryset = queryset.filter(date=date)
         if search:
@@ -109,6 +110,7 @@ class NewsCategoryViewSet(viewsets.ModelViewSet):
 class NewsSourceViewSet(viewsets.ModelViewSet):
     queryset = NewsSource.objects.all()
     serializer_class = NewsSourceSerializer
+    
 
 # ✅ Comment creation
 class CommentCreateView(generics.CreateAPIView):
@@ -255,7 +257,9 @@ class AdvertisementListView(generics.ListAPIView):
     serializer_class = AdvertisementSerializer
 
     def get_queryset(self):
-        queryset = Advertisement.objects.filter(is_active=True)
+        ad_category = self.request.query_params.get('category')
+        if ad_category:
+            queryset = queryset.filter(category__name__iexact=ad_category)
         ad_space = self.request.query_params.get('space')
         today = timezone.now().date()
         queryset = queryset.filter(start_date__lte=today, end_date__gte=today)
