@@ -74,7 +74,7 @@ DATABASES = {
             "postgresql://naijatalkdb_user:VI5JSLKmkYKXOEvKjECYuJ9efW15l0pY@dpg-d356t1li9vc738uf0ag-a.oregon-postgres.render.com:5432/naijatalkdb"
         ),
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=True   
     )
 }
 
