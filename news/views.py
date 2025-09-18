@@ -1,9 +1,8 @@
 # file: news/view.py
-from unicodedata import category
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsCategorySerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsSourceSerializer, NewsletterHistorySerializer
 
-from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost,NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory
-
+from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory, CategoryVisit
+from django.db.models import F
 from django.core.mail import send_mail
 from django.conf import settings
 from .emails import send_newsletter
@@ -107,12 +106,19 @@ class NewsCategoryViewSet(viewsets.ModelViewSet):
     queryset = NewsCategory.objects.all()
     serializer_class = NewsCategorySerializer
 
+def track_category_visit(category_name):
+    category = get_object_or_404(NewsCategory, name__iexact=category_name)
+    CategoryVisit.objects.update_or_create(
+        main_category=category,
+        defaults={"views": 0}
+    )
+    CategoryVisit.objects.filter(main_category=category).update(views=F("views") + 1)
+    
 class NewsSourceViewSet(viewsets.ModelViewSet):
     queryset = NewsSource.objects.all()
     serializer_class = NewsSourceSerializer
     
 
-# ✅ Comment creation
 class CommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer
 
@@ -122,12 +128,14 @@ class CommentCreateView(generics.CreateAPIView):
         data['time'] = timezone.now().time()
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        comment = serializer.save()
 
-        post = get_object_or_404(NewsPost, id=data.get('news_post_id'))
-        post.comments.add(comment)
+        with transaction.atomic():
+            comment = serializer.save()
+            post = get_object_or_404(NewsPost, id=data.get('news_post_id'))
+            post.comments.add(comment)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 # ✅ Top News assignment
@@ -257,13 +265,17 @@ class AdvertisementListView(generics.ListAPIView):
     serializer_class = AdvertisementSerializer
 
     def get_queryset(self):
+        today = timezone.now().date()
+        queryset = Advertisement.objects.filter(
+            start_date__lte=today,
+            end_date__gte=today
+        )
+
         ad_category = self.request.query_params.get('category')
         if ad_category:
-            queryset = queryset.filter(category__name__iexact=ad_category)
-        ad_space = self.request.query_params.get('space')
-        today = timezone.now().date()
-        queryset = queryset.filter(start_date__lte=today, end_date__gte=today)
+            queryset = queryset.filter(main_category__name__iexact=ad_category)
 
+        ad_space = self.request.query_params.get('space')
         if ad_space:
             queryset = queryset.filter(ad_space=ad_space)
 
@@ -501,9 +513,9 @@ class NewsLetterSubscriptionView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     
     def get_permissions(self):
-        if self.request.method == 'GET':
-            return [IsAuthenticated()]
-        return []
+        if self.request.method == 'POST':
+            return []  # public can subscribe
+        return [IsAuthenticated()]
 
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')

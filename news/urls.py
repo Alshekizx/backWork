@@ -10,7 +10,7 @@ from .views import (
     set_top_news, list_top_news, set_trending_news, list_trending_news,
     AdminSignupView, AdminLoginView, AdminListView, DeleteAdminView,
     track_blog_visit, admin_dashboard_stats, fetch_news_view,
-    NewsLetterSubscriptionView
+    NewsLetterSubscriptionView, track_category_visit
 )
 
 router = DefaultRouter()
@@ -56,7 +56,8 @@ urlpatterns = [
     path('contact/', ContactUsListCreateView.as_view(), name='contact-list-create'),
     path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),
     path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
+    path("track-category/", track_category_visit, name="track-category"),
+
 
     path("", include(router.urls)),
-
 ]

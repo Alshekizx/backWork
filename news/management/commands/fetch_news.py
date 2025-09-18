@@ -51,9 +51,10 @@ class Command(BaseCommand):
                     source=source.name,
                     image=image,
                     share_link=entry.link,
-                    main_category=source.main_category.name,
+                    main_category=source.main_category,  # ✅ pass instance, not string
                     sub_category="",
                 )
+
                 self.stdout.write(self.style.SUCCESS(f"✓ Added: {entry.title[:60]}"))
 
     def fetch_article(self, url, entry):

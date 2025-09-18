@@ -28,6 +28,8 @@ SECRET_KEY = 'django-insecure-l39%9vhz72q-*%6^ezr*_@932*)4-x&i+0sf1k#@x^&ee)*yzw
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
     "naijatalkbackend.onrender.com",
 ]
 
@@ -94,7 +96,15 @@ WSGI_APPLICATION = 'newsapi.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+
+     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'naijatalk',
+        'USER': 'naijatalk_user',
+        'PASSWORD': 'yourpassword',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 AUTH_USER_MODEL = 'news.CustomUser'
@@ -141,6 +151,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+     "http://localhost:8000",  # ✅ Added local backend
     "https://naijatalk.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
     "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
@@ -151,6 +162,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True  # ✅ Add this
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",  # ✅ Added local backend
     "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
     "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
     "https://naijatalk.vercel.app",

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from newsapi import settings
-from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource
+from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource, CategoryPlacement
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from .constants import MAIN_CATEGORIES
@@ -67,21 +67,74 @@ class NewsPostSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['share_Link']
 
+class CategoryPlacementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryPlacement
+        fields = ["id", "placement", "priority", "main_category"]
+
 class NewsCategorySerializer(serializers.ModelSerializer):
+    placements = CategoryPlacementSerializer(many=True)
+
     class Meta:
         model = NewsCategory
-        fields = "__all__"
+        fields = ["id", "name", "keywords", "placements"]
+
+    def create(self, validated_data):
+        placements_data = validated_data.pop("placements", [])
+        main_category = NewsCategory.objects.create(**validated_data)
+
+        for placement in placements_data:
+            CategoryPlacement.objects.create(main_category=main_category, **placement)
+
+        return main_category
+
+    def update(self, instance, validated_data):
+        placements_data = validated_data.pop("placements", [])
+        instance.name = validated_data.get("name", instance.name)
+        instance.keywords = validated_data.get("keywords", instance.keywords)
+        instance.save()
+
+        # Update placements (clear & recreate for simplicity)
+        instance.placements.all().delete()
+        for placement in placements_data:
+            CategoryPlacement.objects.create(main_category=instance, **placement)
+
+        return instance
 
 class NewsSourceSerializer(serializers.ModelSerializer):
+    main_category = serializers.SlugRelatedField(
+    slug_field="name",
+    queryset=NewsCategory.objects.all()
+    )
+
     class Meta:
         model = NewsSource
         fields = "__all__"
 
+    def create(self, validated_data):
+        main_category_name = validated_data.pop("main_category")
+        main_category, _ = NewsCategory.objects.get_or_create(name=main_category_name)
+        validated_data["main_category"] = main_category
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if "main_category" in validated_data:
+            main_category_name = validated_data.pop("main_category")
+            main_category, _ = NewsCategory.objects.get_or_create(name=main_category_name)
+            validated_data["main_category"] = main_category
+        return super().update(instance, validated_data)
+
 
 class AdvertisementSerializer(serializers.ModelSerializer):
+    main_category = serializers.SlugRelatedField(
+        slug_field="name",
+        queryset=NewsCategory.objects.all()
+    )
+
     class Meta:
         model = Advertisement
-        fields = '__all__'
+        fields = "__all__"
+
 
 
 class AdminAccountSerializer(serializers.ModelSerializer):
@@ -103,21 +156,31 @@ class AdminAccountSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         email = validated_data.pop('email')
-        employee_id = validated_data['employee_id']
-        full_name = f"{validated_data['first_name']} {validated_data['last_name']}"
         password = validated_data.pop('password')
         profile_image = validated_data.pop('profile_image', None)
         date_of_birth = validated_data.pop('date_of_birth')
         user_type = validated_data.get('user_type', 'employee')
         manager = validated_data.get('manager')
-        
+
+        def generate_employee_id():
+            today = datetime.date.today()
+            prefix = f"EMP-{today.strftime('%Y%m%d')}"
+            count = AdminAccount.objects.filter(employee_id__startswith=prefix).count() + 1
+            return f"{prefix}-{count:04d}"
+
+        # ✅ generate here if employee
+        employee_id = validated_data.get('employee_id') or (
+            generate_employee_id() if user_type == "employee" else None
+        )
+
+        full_name = f"{validated_data['first_name']} {validated_data['last_name']}"
+
         if CustomUser.objects.filter(username=employee_id).exists():
             raise serializers.ValidationError({"employee_id": "Employee ID already exists"})
 
         if CustomUser.objects.filter(email=email).exists():
             raise serializers.ValidationError({"email": "Email already exists"})
 
-        # ✅ let create_user handle hashing
         user = CustomUser.objects.create_user(
             username=employee_id,
             email=email,
@@ -141,17 +204,6 @@ class AdminAccountSerializer(serializers.ModelSerializer):
             user_type=user_type,
             manager=manager if user_type == 'employee' else None
         )
-        
-        def generate_employee_id():
-            today = datetime.date.today()
-            prefix = f"EMP-{today.strftime('%Y%m%d')}"
-            count = AdminAccount.objects.filter(employee_id__startswith=prefix).count() + 1
-            return f"{prefix}-{count:04d}"
-
-        # Inside create()
-        if validated_data.get("user_type") == "employee":
-            validated_data["employee_id"] = generate_employee_id()
-
 
         return admin_account
 

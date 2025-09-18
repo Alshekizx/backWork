@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from multiselectfield import MultiSelectField
 import uuid
-from .constants import MAIN_CATEGORIES
 from django.utils import timezone 
 from django.contrib.auth.models import BaseUserManager
 from django.core.mail import send_mail
@@ -98,7 +97,7 @@ class AdminAccount(models.Model):
 
 class NewsPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    image = models.URLField()
+    image = models.URLField(max_length=500)
     header = models.CharField(max_length=255)
     content = models.TextField()
     date = models.DateField()
@@ -106,7 +105,7 @@ class NewsPost(models.Model):
     source = models.CharField(max_length=255)
     comments = models.ManyToManyField(Comment, blank=True, related_name='news_posts')
     views = models.PositiveIntegerField(default=0)
-    share_link = models.URLField()
+    share_link = models.URLField(max_length=1000)
     video_link = models.URLField(blank=True, null=True, help_text="Optional video link for the news post.")
     
     # ✅ Replace MAIN_CATEGORIES with ForeignKey
@@ -115,7 +114,7 @@ class NewsPost(models.Model):
         on_delete=models.CASCADE,
         related_name="news_posts"
     )
-    sub_category = models.CharField(max_length=100, blank=True)
+    sub_category = models.CharField(max_length=250, blank=True)
    
     daily_visitors = models.IntegerField(default=0)
     monthly_visitors = models.IntegerField(default=0)
@@ -173,7 +172,8 @@ class NewsPost(models.Model):
 
 
 class NewsCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200, unique=True)
     keywords = models.TextField(
         help_text="Comma-separated keywords to detect category relevance"
     )
@@ -183,6 +183,38 @@ class NewsCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CategoryPlacement(models.Model):
+    PLACEMENT_CHOICES = [
+        ("header", "Header"),
+        ("footer", "Footer"),
+        ("side_nav", "Homepage Side Nav"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    main_category = models.ForeignKey(
+        NewsCategory, on_delete=models.CASCADE, related_name="placements"
+    )
+    placement = models.CharField(max_length=20, choices=PLACEMENT_CHOICES)
+    priority = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ("main_category", "placement")  # prevent duplicates
+
+    def __str__(self):
+        return f"{self.main_category.name} - {self.placement} (priority {self.priority})"
+
+class CategoryVisit(models.Model):
+    main_category = models.OneToOneField(
+        NewsCategory,
+        on_delete=models.CASCADE,
+        related_name="visit_stats"
+    )
+    views = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.main_category.name} - {self.views} views"
 
 
 class NewsSource(models.Model):
@@ -223,11 +255,11 @@ class Advertisement(models.Model):
     ad_text = models.TextField(blank=True, null=True)
     html_code = models.TextField(blank=True, null=True)
     redirect_url = models.URLField(blank=True, null=True)
-    category = models.ForeignKey(
+    main_category = models.ForeignKey(
     "NewsCategory",
     on_delete=models.CASCADE,
     related_name="ads"
-)
+    )
 
     is_active = models.BooleanField(default=True)
     start_date = models.DateField()
