@@ -4,39 +4,46 @@ from newsapi import settings
 from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource, CategoryPlacement
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
-from .constants import MAIN_CATEGORIES
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 import datetime
 
+class NewsCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsCategory
+        fields = ["id", "name", "keywords"]
+
+
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
-    notification_preferences = serializers.ListField(
-        child=serializers.ChoiceField(choices=MAIN_CATEGORIES),
+    # accept IDs for creation
+    notification_preferences = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=NewsCategory.objects.all(),
         required=False
     )
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = CustomUser
         fields = (
-            'id', 'username', 'email', 'password',
-            'full_name', 'profile_picture', 'notification_preferences',
-            'subscribe_newsletter', 'date_of_birth',
+            "id", "username", "email", "password",
+            "full_name", "profile_picture",
+            "notification_preferences",
+            "subscribe_newsletter", "date_of_birth",
         )
 
 
 class CustomUserSerializer(BaseUserSerializer):
-    notification_preferences = serializers.ListField(
-        child=serializers.ChoiceField(choices=MAIN_CATEGORIES),
-        required=False
-    )
+    # return full category details in responses
+    notification_preferences = NewsCategorySerializer(many=True, read_only=True)
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
         fields = (
-            'id', 'username', 'email', 'password',
-            'full_name', 'profile_picture', 'notification_preferences',
-            'subscribe_newsletter', 'date_of_birth',
+            "id", "username", "email",
+            "full_name", "profile_picture",
+            "notification_preferences",
+            "subscribe_newsletter", "date_of_birth",
         )
 
 
