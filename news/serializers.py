@@ -128,35 +128,6 @@ class NewsPostSerializer(serializers.ModelSerializer):
         read_only_fields = ['share_Link']
 
 
-class NewsCategorySerializer(serializers.ModelSerializer):
-    placements = CategoryPlacementSerializer(many=True)
-
-    class Meta:
-        model = NewsCategory
-        fields = ["id", "name", "keywords", "placements"]
-
-    def create(self, validated_data):
-        placements_data = validated_data.pop("placements", [])
-        main_category = NewsCategory.objects.create(**validated_data)
-
-        for placement in placements_data:
-            CategoryPlacement.objects.create(main_category=main_category, **placement)
-
-        return main_category
-
-    def update(self, instance, validated_data):
-        placements_data = validated_data.pop("placements", [])
-        instance.name = validated_data.get("name", instance.name)
-        instance.keywords = validated_data.get("keywords", instance.keywords)
-        instance.save()
-
-        # Update placements (clear & recreate for simplicity)
-        instance.placements.all().delete()
-        for placement in placements_data:
-            CategoryPlacement.objects.create(main_category=instance, **placement)
-
-        return instance
-
 class NewsSourceSerializer(serializers.ModelSerializer):
     main_category = serializers.SlugRelatedField(
     slug_field="name",
