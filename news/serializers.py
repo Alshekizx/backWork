@@ -9,10 +9,63 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 import datetime
 
+class CategoryPlacementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryPlacement
+        fields = ["id", "placement", "priority", "main_category"]
+
+
 class NewsCategorySerializer(serializers.ModelSerializer):
+    placements = CategoryPlacementSerializer(many=True, required=False)
+
     class Meta:
         model = NewsCategory
-        fields = ["id", "name", "keywords"]
+        fields = ["id", "name", "keywords", "placements"]
+
+    def create(self, validated_data):
+        placements_data = validated_data.pop("placements", [])
+
+        # Create the category
+        main_category = NewsCategory.objects.create(**validated_data)
+
+        if not placements_data:
+            # Auto-generate placement if none is passed
+            default_placement_id = main_category.id  # or CategoryPlacement.objects.count() + 1
+            CategoryPlacement.objects.create(
+                main_category=main_category,
+                placement=default_placement_id,
+                priority=1  # you can adjust priority logic
+            )
+        else:
+            # If placements are provided, use them
+            for placement in placements_data:
+                CategoryPlacement.objects.create(main_category=main_category, **placement)
+
+        return main_category
+
+    def update(self, instance, validated_data):
+        placements_data = validated_data.pop("placements", [])
+
+        instance.name = validated_data.get("name", instance.name)
+        instance.keywords = validated_data.get("keywords", instance.keywords)
+        instance.save()
+
+        # Reset placements on update
+        instance.placements.all().delete()
+
+        if not placements_data:
+            default_placement_id = instance.id
+            CategoryPlacement.objects.create(
+                main_category=instance,
+                placement=default_placement_id,
+                priority=1
+            )
+        else:
+            for placement in placements_data:
+                CategoryPlacement.objects.create(main_category=instance, **placement)
+
+        return instance
+
 
 
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
@@ -74,10 +127,6 @@ class NewsPostSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['share_Link']
 
-class CategoryPlacementSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CategoryPlacement
-        fields = ["id", "placement", "priority", "main_category"]
 
 class NewsCategorySerializer(serializers.ModelSerializer):
     placements = CategoryPlacementSerializer(many=True)
