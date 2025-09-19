@@ -10,6 +10,10 @@ from django.db import IntegrityError
 import datetime
 
 class CategoryPlacementSerializer(serializers.ModelSerializer):
+    placement = serializers.IntegerField(required=False)
+    priority = serializers.IntegerField(required=False)
+    main_category = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = CategoryPlacement
         fields = ["id", "placement", "priority", "main_category"]
@@ -65,7 +69,6 @@ class NewsCategorySerializer(serializers.ModelSerializer):
                 CategoryPlacement.objects.create(main_category=instance, **placement)
 
         return instance
-
 
 
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
