@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "naijatalkbackend.onrender.com",  # Render backend
-    "backwork.onrender.com",          # Render service name
+    "backwork-9ddv.onrender.com",          # Render service name
 ]
 
 FRONTEND_DOMAIN = "https://naijatalk.xyz"
