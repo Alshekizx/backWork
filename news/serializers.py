@@ -129,7 +129,10 @@ class NewsPostSerializer(serializers.ModelSerializer):
 
 
 class NewsSourceSerializer(serializers.ModelSerializer):
-    main_category = serializers.CharField()
+    main_category = serializers.SlugRelatedField(
+        slug_field="name",  # ✅ use name instead of UUID
+        queryset=NewsCategory.objects.all()
+    )
 
     class Meta:
         model = NewsSource
