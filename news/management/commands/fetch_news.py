@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from newspaper import Article
 from django.core.management.base import BaseCommand
 
+
 class Command(BaseCommand):
     help = "Fetches latest news from RSS feeds using DB-configured categories & sources"
 
@@ -42,6 +43,10 @@ class Command(BaseCommand):
                 # ✅ Fetch content
                 content, image = self.fetch_article(entry.link, entry)
 
+                # ✅ Respect source type
+                if source.source_type == "no_image":
+                    image = "/image/default1.jpg"
+
                 NewsPost.objects.create(
                     id=uuid.uuid4(),
                     header=entry.title,
@@ -51,7 +56,7 @@ class Command(BaseCommand):
                     source=source.name,
                     image=image,
                     share_link=entry.link,
-                    main_category=source.main_category,  # ✅ pass instance, not string
+                    main_category=source.main_category,
                     sub_category="",
                 )
 

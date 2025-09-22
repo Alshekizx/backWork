@@ -227,6 +227,11 @@ class NewsSource(models.Model):
         related_name="sources"
     )
 
+    provides_image = models.BooleanField(
+        default=True,
+        help_text="Does this source usually provide an image?"
+    )
+
     def __str__(self):
         return f"{self.name} ({self.main_category.name})"
 
