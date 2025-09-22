@@ -130,7 +130,7 @@ class NewsPostSerializer(serializers.ModelSerializer):
 
 class NewsSourceSerializer(serializers.ModelSerializer):
     main_category = serializers.SlugRelatedField(
-        slug_field="name",  # ✅ use name instead of UUID
+        slug_field="name",
         queryset=NewsCategory.objects.all()
     )
 
@@ -138,19 +138,7 @@ class NewsSourceSerializer(serializers.ModelSerializer):
         model = NewsSource
         fields = "__all__"
 
-    def create(self, validated_data):
-        main_category_name = validated_data.pop("main_category")
-        main_category, _ = NewsCategory.objects.get_or_create(name=main_category_name)
-        validated_data["main_category"] = main_category
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        if "main_category" in validated_data:
-            main_category_name = validated_data.pop("main_category")
-            main_category, _ = NewsCategory.objects.get_or_create(name=main_category_name)
-            validated_data["main_category"] = main_category
-        return super().update(instance, validated_data)
-
+    
 
 class AdvertisementSerializer(serializers.ModelSerializer):
     main_category = serializers.SlugRelatedField(
