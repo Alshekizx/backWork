@@ -129,14 +129,7 @@ class NewsPostSerializer(serializers.ModelSerializer):
 
 
 class NewsSourceSerializer(serializers.ModelSerializer):
-    main_category = serializers.SlugRelatedField(
-        slug_field="name",
-        queryset=NewsCategory.objects.all()
-    )
-    source_type = serializers.ChoiceField(
-        choices=NewsSource.SOURCE_TYPE_CHOICES,
-        default="with_image"
-    )
+    main_category = serializers.CharField()
 
     class Meta:
         model = NewsSource
