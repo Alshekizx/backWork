@@ -218,6 +218,11 @@ class CategoryVisit(models.Model):
 
 
 class NewsSource(models.Model):
+    SOURCE_TYPE_CHOICES = [
+        ("with_image", "Fetch with image"),
+        ("no_image", "Fetch without image"),
+    ]
+
     name = models.CharField(max_length=255)
     website = models.URLField()
     rss = models.URLField()
@@ -227,9 +232,11 @@ class NewsSource(models.Model):
         related_name="sources"
     )
 
-    provides_image = models.BooleanField(
-        default=True,
-        help_text="Does this source usually provide an image?"
+    source_type = models.CharField(
+        max_length=20,
+        choices=SOURCE_TYPE_CHOICES,
+        default="with_image",
+        help_text="Should the fetcher expect images from this source?"
     )
 
     def __str__(self):
