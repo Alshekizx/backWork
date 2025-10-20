@@ -1,7 +1,7 @@
 # news/management/commands/fetch_news.py
 from news.models import NewsPost, NewsSource
 from datetime import datetime, timedelta
-import feedparser, time, uuid
+import feedparser, time, uuid, requests
 from bs4 import BeautifulSoup
 from newspaper import Article
 from django.core.management.base import BaseCommand
@@ -16,7 +16,18 @@ class Command(BaseCommand):
 
         for source in sources:
             expected_keywords = source.main_category.keyword_list()
-            feed = feedparser.parse(source.rss)
+
+            # ✅ Fetch feed XML using requests
+            try:
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (compatible; NaijaTalkBot/1.0; +https://naijatalk.com)"
+                }
+                resp = requests.get(source.rss, headers=headers, timeout=15)
+                resp.raise_for_status()
+                feed = feedparser.parse(resp.content)
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f"❌ Failed to fetch {source.rss}: {e}"))
+                continue
 
             if not feed.entries:
                 self.stdout.write(self.style.WARNING(

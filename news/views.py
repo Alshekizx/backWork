@@ -1,7 +1,8 @@
 # file: news/view.py
+
 from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsCategorySerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsSourceSerializer, NewsletterHistorySerializer
 
-from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost, Advertisement, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory, CategoryVisit
+from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory, CategoryVisit
 from django.db.models import F
 from django.core.mail import send_mail
 from django.conf import settings
@@ -13,7 +14,7 @@ from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from rest_framework.permissions import BasePermission,IsAuthenticated, IsAdminUser
+from rest_framework.permissions import BasePermission,IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import check_password
@@ -29,14 +30,17 @@ from django.core.management import call_command
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-
-
-from django.contrib.auth import get_user_model
 import random
 import string
 from django.views.decorators.http import require_GET
+from django.contrib.auth import get_user_model
+from django.utils.crypto import get_random_string
 
+
+import os, json
+from .firebase import get_firebase_auth
+
+firebase_auth = get_firebase_auth()
 User = get_user_model()
 
 @api_view(['GET'])
@@ -68,6 +72,53 @@ def check_email_availability(request):
 
 # ✅ List all posts, with optional search, category, date filtering
 # news/views.py
+
+@api_view(["POST"])
+def google_login(request):
+    token = request.data.get("token")
+    if not token:
+        return Response({"error": "Missing token"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Verify the Firebase token
+        decoded = firebase_auth.verify_id_token(token)
+
+        email = decoded.get("email")
+        name = decoded.get("name", "")
+        picture = decoded.get("picture", "")
+
+        if not email:
+            return Response({"error": "No email in Firebase token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create or fetch the user
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                "username": email.split("@")[0],
+                "full_name": name,
+                "profile_picture": picture,
+            }
+        )
+
+        # Issue or fetch DRF token
+        auth_token, _ = Token.objects.get_or_create(user=user)
+
+        return Response({
+            "auth_token": auth_token.key,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "full_name": user.full_name,
+                "profile_picture": user.profile_picture,
+            }
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({"error": f"Invalid Firebase token: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 
 class NewsPostListView(generics.ListCreateAPIView):
     serializer_class = NewsPostSerializer
@@ -312,13 +363,6 @@ class CreateEmployeeView(generics.CreateAPIView):
         serializer.save(manager=self.request.user.account_profile, user_type='employee')
         
 
-
-class UserListView(generics.ListAPIView):
-    serializer_class = CustomUserSerializer
-    permission_classes = [IsManager]
-    queryset = CustomUser.objects.all()
-    
-
 class EmployeeListView(generics.ListAPIView):
     serializer_class = AdminAccountSerializer
     permission_classes = [IsManager]
@@ -437,6 +481,38 @@ def get_visit_stats(request, post_id):
     except NewsPost.DoesNotExist:
         return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+# ✅ List Users
+class UserListView(generics.ListAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsManager]
+    queryset = User.objects.all().order_by("-time_joined")
+
+# ✅ Delete User
+@api_view(["DELETE"])
+@permission_classes([IsManager])
+def delete_user(request, id):
+    try:
+        user = User.objects.get(id=id)
+        user.delete()
+        return Response({"success": True, "message": "User deleted"})
+    except User.DoesNotExist:
+        return Response({"success": False, "error": "User not found"}, status=404)
+
+# ✅ Reset Password
+@api_view(["POST"])
+@permission_classes([IsManager])
+def reset_user_password(request, id):
+    try:
+        user = User.objects.get(id=id)
+        new_password = get_random_string(10)  # random 10-char password
+        user.set_password(new_password)
+        user.save()
+        return Response({"success": True, "new_password": new_password})
+    except User.DoesNotExist:
+        return Response({"success": False, "error": "User not found"}, status=404)
+    
+
         
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -483,9 +559,9 @@ def track_blog_visit(request, post_id):
 
 
 
-@csrf_exempt
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Optional: protect with auth
+@permission_classes([IsAuthenticated])  # or remove if you want it public
+@csrf_exempt 
 def fetch_news_view(request):
     try:
         call_command('fetch_news')

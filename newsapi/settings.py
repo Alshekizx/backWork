@@ -1,5 +1,4 @@
 from pathlib import Path
-import dj_database_url
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -7,17 +6,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-key-for-dev")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False").lower() in ["true", "1"]
+# Local development
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "naijatalkbackend.onrender.com",  # Render backend
-    "backwork-9ddv.onrender.com",          # Render service name
 ]
 
-FRONTEND_DOMAIN = "https://naijatalk.xyz"
+FRONTEND_DOMAIN = "http://localhost:3000"
 
 # Application definition
 INSTALLED_APPS = [
@@ -66,11 +63,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "newsapi.wsgi.application"
 
-# Database (Render provides DATABASE_URL automatically)
+# Database - PostgreSQL (local)
 DATABASES = {
-    'default': dj_database_url.config(
-        conn_max_age=600
-    )
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "naijatalk_db"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+    }
 }
 
 AUTH_USER_MODEL = "news.CustomUser"
@@ -89,34 +91,23 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# Static files (Render expects collected files in /staticfiles)
+# Static files
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CORS
+# CORS - local only
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:8000",
-    "https://naijatalk.vercel.app",
-    "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
-    "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
-    "https://www.naijatalk.xyz",
-    "https://naijatalk.xyz",
+    "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-# CSRF
+# CSRF - local only
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
-    "https://naijatalk-c9wnwzhnk-alshekizxs-projects.vercel.app",
-    "https://naijatalk-as40bpbhz-alshekizxs-projects.vercel.app",
-    "https://naijatalk.vercel.app",
-    "https://www.naijatalk.xyz",
-    "https://naijatalk.xyz",
-    "https://naijatalkbackend.onrender.com",
-    "https://backwork.onrender.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 # REST Framework
@@ -136,11 +127,13 @@ DJOSER = {
     },
 }
 
-# Email (SendGrid for Render)
-DEFAULT_FROM_EMAIL = "no-reply@naijatalk.com"
+# Email - console backend for dev
+DEFAULT_FROM_EMAIL = "no-reply@naijatalk.local"
 ADMIN_EMAIL = "seyiduncan40@gmail.com"
 
-EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False
-SENDGRID_ECHO_TO_STDOUT = True
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+FIREBASE_SERVICE_ACCOUNT_FILE = os.getenv(
+    "FIREBASE_SERVICE_ACCOUNT_FILE",
+    os.path.join(BASE_DIR, "firebase_service_account.json")  # fallback path
+)

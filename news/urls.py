@@ -1,5 +1,8 @@
+#file: news/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from view.custom_auth import CustomTokenLoginView
+
 from .views import (
     AdvertisementCreateView, AdvertisementDetailView, AdvertisementListView, CommentCreateView,
     ContactUsDeleteView, ContactUsListCreateView,
@@ -10,7 +13,8 @@ from .views import (
     set_top_news, list_top_news, set_trending_news, list_trending_news,
     AdminSignupView, AdminLoginView, AdminListView, DeleteAdminView,
     track_blog_visit, admin_dashboard_stats, fetch_news_view,
-    NewsLetterSubscriptionView, track_category_visit
+    NewsLetterSubscriptionView, track_category_visit, UserListView, 
+    delete_user, reset_user_password, google_login
 )
 
 router = DefaultRouter()
@@ -48,6 +52,9 @@ urlpatterns = [
 
     path("auth/check-username/", check_username_availability),
     path("auth/check-email/", check_email_availability),
+    path("auth/token/login/", CustomTokenLoginView.as_view(), name="custom_token_login"),
+    path("auth/google-login/", google_login, name="google_login"),
+    path("auth/", include("djoser.urls")),
 
     path('subscribe-newsletter/', NewsLetterSubscriptionView.as_view(), name='subscribe-newsletter'),
     path('newsletter/send/', SendNewsletterView.as_view(), name='send-newsletter'),
@@ -57,6 +64,10 @@ urlpatterns = [
     path('contact/<int:pk>/', ContactUsDeleteView.as_view(), name='contact-delete'),
     path('contact/<int:pk>/toggle-seen/', ToggleContactSeenStatus.as_view(), name='toggle-contact-seen'),
     path("track-category/", track_category_visit, name="track-category"),
+
+    path("users/", UserListView.as_view(), name="user-list"),
+    path("users/<uuid:id>/delete/", delete_user, name="delete-user"),
+    path("users/<uuid:id>/reset-password/", reset_user_password, name="reset-password"),
 
 
     path("", include(router.urls)),
