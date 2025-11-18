@@ -6,15 +6,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-key-for-dev")
 
-# Local development
-DEBUG = True
+
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
+    "naijatalk.xyz",
+    "www.naijatalk.xyz",
+    "naijatalk-evddc7csapc2chd5.canadacentral-01.azurewebsites.net",
 ]
 
-FRONTEND_DOMAIN = "http://localhost:3000"
+FRONTEND_DOMAIN = "https://www.naijatalk.xyz/"
 
 # Application definition
 INSTALLED_APPS = [
@@ -34,15 +35,18 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# Insert WhiteNoise AFTER security middleware
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 ROOT_URLCONF = "newsapi.urls"
 
@@ -65,13 +69,16 @@ WSGI_APPLICATION = "newsapi.wsgi.application"
 
 # Database - PostgreSQL (local)
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "naijatalk_db"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require'
+        }
     }
 }
 
@@ -97,18 +104,23 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CORS - local only
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "https://www.naijatalk.xyz",
+    "https://naijatalk.xyz",
+    "naijatalk-evddc7csapc2chd5.canadacentral-01.azurewebsites.net",
+
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.naijatalk.xyz",
+    "https://naijatalk.xyz",
+    "naijatalk-evddc7csapc2chd5.canadacentral-01.azurewebsites.net",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
-# CSRF - local only
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -128,7 +140,7 @@ DJOSER = {
 }
 
 # Email - console backend for dev
-DEFAULT_FROM_EMAIL = "no-reply@naijatalk.local"
+DEFAULT_FROM_EMAIL = "no-reply@naijatalk.xyz"
 ADMIN_EMAIL = "seyiduncan40@gmail.com"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
