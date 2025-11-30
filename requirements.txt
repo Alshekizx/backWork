@@ -53,3 +53,5 @@ tqdm
 typing_extensions
 urllib3
 Werkzeug
+firebase-admin
+google-cloud-firestore
