@@ -55,3 +55,4 @@ urllib3
 Werkzeug
 firebase-admin
 google-cloud-firestore
+python-dotenv
