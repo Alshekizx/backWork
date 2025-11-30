@@ -12,7 +12,6 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "naijatalk.xyz",
     "www.naijatalk.xyz",
-    "naijatalk-evddc7csapc2chd5.canadacentral-01.azurewebsites.net",
 ]
 
 FRONTEND_DOMAIN = "https://www.naijatalk.xyz/"
@@ -71,16 +70,14 @@ WSGI_APPLICATION = "newsapi.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': "127.0.0.1",
+        'NAME': "naijatalk_db",
+        'USER': "naijauser",
+        'PASSWORD': "StrongPasswordHere",
         'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require'
-        }
     }
 }
+
 
 AUTH_USER_MODEL = "news.CustomUser"
 
@@ -108,14 +105,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "https://www.naijatalk.xyz",
     "https://naijatalk.xyz",
-    "naijatalk-evddc7csapc2chd5.canadacentral-01.azurewebsites.net",
 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://www.naijatalk.xyz",
     "https://naijatalk.xyz",
-    "naijatalk-evddc7csapc2chd5.canadacentral-01.azurewebsites.net",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
