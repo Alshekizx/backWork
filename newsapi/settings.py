@@ -68,17 +68,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "newsapi.wsgi.application"
 
 # Database - PostgreSQL (local)
+# Database - PostgreSQL (local)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': "127.0.0.1",
+        'NAME': "naijatalk_db",
+        'USER': "naijauser",
+        'PASSWORD': "StrongPasswordHere",
         'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require'
-        }
     }
 }
 
