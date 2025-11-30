@@ -15,7 +15,6 @@ django-multiselectfield
 django-sendgrid-v5
 djangorestframework
 djangorestframework_simplejwt
-djoser
 ecdsa
 feedfinder2
 feedparser
@@ -56,3 +55,5 @@ Werkzeug
 firebase-admin
 google-cloud-firestore
 python-dotenv
+djangorestframework
+djoser
