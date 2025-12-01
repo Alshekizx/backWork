@@ -1,0 +1,84 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+ENV/
+.vscode/
+.idea/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+static/
+
+# Django migrations (optional to ignore; many people track them)
+# Uncomment if you don’t want to track migrations:
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Environment variables
+.env
+*.env
+config.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# PyCharm
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Byte-compiled / optimized / DLL files
+*.so
+
+# Backup files
+*.bak
+*.swp
+*.tmp
+
+# Coverage / test reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# MyPy
+.mypy_cache/
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# Pipenv / poetry
+Pipfile.lock
+poetry.lock
+
+# Node stuff (if using React/Vite in same repo)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
