@@ -1,7 +1,7 @@
 #file: news/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from view.custom_auth import CustomTokenLoginView
+from .view2.custom_auth import CustomTokenLoginView
 
 from .views import (
     AdvertisementCreateView, AdvertisementDetailView, AdvertisementListView, CommentCreateView,
