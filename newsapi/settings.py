@@ -13,6 +13,7 @@ ALLOWED_HOSTS = [
     "naijatalk.xyz",
     "www.naijatalk.xyz",
     "api.naijatalk.xyz",
+    "naijatalk",
     "localhost",
     "127.0.0.1",
 ]
