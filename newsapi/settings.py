@@ -12,6 +12,9 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "naijatalk.xyz",
     "www.naijatalk.xyz",
+    "api.naijatalk.xyz",
+    "localhost",
+    "127.0.0.1",
 ]
 
 FRONTEND_DOMAIN = "https://www.naijatalk.xyz/"

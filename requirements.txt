@@ -57,3 +57,5 @@ google-cloud-firestore
 python-dotenv
 djangorestframework
 djoser
+gunicorn
+whitenoise
