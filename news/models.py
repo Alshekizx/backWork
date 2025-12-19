@@ -172,15 +172,17 @@ class NewsPost(models.Model):
             self.monthly_visitors += 1
         self.save()
 
+    @staticmethod
     def save_remote_image(image_url: str) -> str:
         response = requests.get(image_url, timeout=20)
         response.raise_for_status()
 
-        ext = image_url.split('.')[-1].split('?')[0]
+        ext = image_url.split('.')[-1].split('?')[0] or "jpg"
         filename = f"news_images/{uuid.uuid4()}.{ext}"
 
         path = default_storage.save(filename, ContentFile(response.content))
         return default_storage.url(path)
+ 
 
     def __str__(self):
         return self.header
