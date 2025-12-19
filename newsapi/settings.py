@@ -148,3 +148,6 @@ FIREBASE_SERVICE_ACCOUNT_FILE = os.getenv(
     "FIREBASE_SERVICE_ACCOUNT_FILE",
     os.path.join(BASE_DIR, "firebase_service_account.json")  # fallback path
 )
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
