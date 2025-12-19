@@ -108,40 +108,24 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class NewsPostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
-
-    # Accept remote image URL from frontend
-    image_url = serializers.URLField(write_only=True, required=False)
-
     share_Link = serializers.SerializerMethodField(read_only=True)
-
     main_category = serializers.SlugRelatedField(
         slug_field="name",
         queryset=NewsCategory.objects.all()
     )
 
-    class Meta:
-        model = NewsPost
-        fields = "__all__"
-        read_only_fields = ["share_Link"]
-
     def get_share_Link(self, obj):
-        request = self.context.get("request")
+        request = self.context.get('request')
         if request:
-            domain = request.build_absolute_uri("/")
+            domain = request.build_absolute_uri('/')  # backend-aware domain
         else:
-            domain = settings.FRONTEND_DOMAIN
+            domain = settings.FRONTEND_DOMAIN         # fallback to constant
         return f"{domain.rstrip('/')}/view/blogDetails/{obj.id}"
 
-    def create(self, validated_data):
-        image_url = validated_data.pop("image_url", None)
-
-        news_post = NewsPost.objects.create(**validated_data)
-
-        if image_url:
-            news_post.image = NewsPost.save_remote_image(image_url)
-            news_post.save(update_fields=["image"])
-
-        return news_post
+    class Meta:
+        model = NewsPost
+        fields = '__all__'
+        read_only_fields = ['share_Link']
 
 
 class NewsSourceSerializer(serializers.ModelSerializer):

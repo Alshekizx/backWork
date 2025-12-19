@@ -7,11 +7,6 @@ from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager
 from django.core.mail import send_mail
 from django.conf import settings
-import requests
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
-
-
 
 
 
@@ -102,7 +97,7 @@ class AdminAccount(models.Model):
 
 class NewsPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    image = models.URLField(max_length=1000, blank=True)
+    image = models.URLField(max_length=500)
     header = models.CharField(max_length=255)
     content = models.TextField()
     date = models.DateField()
@@ -171,18 +166,6 @@ class NewsPost(models.Model):
             self.daily_visitors += 1
             self.monthly_visitors += 1
         self.save()
-
-    @staticmethod
-    def save_remote_image(image_url: str) -> str:
-        response = requests.get(image_url, timeout=20)
-        response.raise_for_status()
-
-        ext = image_url.split('.')[-1].split('?')[0] or "jpg"
-        filename = f"news_images/{uuid.uuid4()}.{ext}"
-
-        path = default_storage.save(filename, ContentFile(response.content))
-        return default_storage.url(path)
- 
 
     def __str__(self):
         return self.header
