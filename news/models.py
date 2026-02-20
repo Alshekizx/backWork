@@ -352,10 +352,11 @@ class NewsletterHistory(models.Model):
 
     def __str__(self):
         return f"{self.subject} ({self.sent_at})"
-    
+
 
 
 class VideoProject(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     details = models.TextField(blank=True, null=True)
