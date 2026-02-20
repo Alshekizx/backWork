@@ -248,3 +248,9 @@ class NewsletterHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsletterHistory
         fields = ['id', 'subject', 'sent_at', 'recipients']
+
+
+class VideoProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoProject
+        fields = "__all__"

@@ -14,7 +14,8 @@ from .views import (
     AdminSignupView, AdminLoginView, AdminListView, DeleteAdminView,
     track_blog_visit, admin_dashboard_stats, fetch_news_view,
     NewsLetterSubscriptionView, track_category_visit, UserListView, 
-    delete_user, reset_user_password, google_login
+    delete_user, reset_user_password, google_login, VideoCreateView, VideoListView, VideoDetailView,
+    VideoUpdateView, VideoDeleteView
 )
 
 router = DefaultRouter()
@@ -68,6 +69,12 @@ urlpatterns = [
     path("users/", UserListView.as_view(), name="user-list"),
     path("users/<uuid:id>/delete/", delete_user, name="delete-user"),
     path("users/<uuid:id>/reset-password/", reset_user_password, name="reset-password"),
+
+     path("videos/", VideoListView.as_view(), name="video-list"),
+    path("videos/create/", VideoCreateView.as_view(), name="video-create"),
+    path("videos/<uuid:id>/", VideoDetailView.as_view(), name="video-detail"),
+    path("videos/<uuid:id>/update/", VideoUpdateView.as_view(), name="video-update"),
+    path("videos/<uuid:id>/delete/", VideoDeleteView.as_view(), name="video-delete"),
 
 
     path("", include(router.urls)),

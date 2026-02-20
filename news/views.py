@@ -1,8 +1,8 @@
 # file: news/view.py
 
-from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsCategorySerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsSourceSerializer, NewsletterHistorySerializer
+from .serializers import AdminAccountSerializer, AdvertisementSerializer, CustomUserSerializer, NewsCategorySerializer, NewsPostSerializer, CommentSerializer, ContactUsSerializer, NewsLetterSubscriptionSerializer, NewsSourceSerializer, NewsletterHistorySerializer, VideoProjectSerializer
 
-from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory, CategoryVisit
+from .models import AdminAccount, Advertisement, CustomUser, NewsCategory, NewsPost, ContactUs, NewsLetterSubscription, NewsSource, NewsletterHistory, CategoryVisit, VideoProject
 from django.db.models import F
 from django.core.mail import send_mail
 from django.conf import settings
@@ -649,3 +649,35 @@ class ToggleContactSeenStatus(APIView):
 class NewsletterHistoryListView(generics.ListAPIView):
     queryset = NewsletterHistory.objects.all().order_by('-sent_at')
     serializer_class = NewsletterHistorySerializer
+
+# Create video
+class VideoCreateView(generics.CreateAPIView):
+    queryset = VideoProject.objects.all()
+    serializer_class = VideoProjectSerializer
+
+
+# Fetch all videos
+class VideoListView(generics.ListAPIView):
+    queryset = VideoProject.objects.all().order_by("-uploaded_at")
+    serializer_class = VideoProjectSerializer
+
+
+# Fetch single video
+class VideoDetailView(generics.RetrieveAPIView):
+    queryset = VideoProject.objects.all()
+    serializer_class = VideoProjectSerializer
+    lookup_field = "id"
+
+
+# Update video
+class VideoUpdateView(generics.UpdateAPIView):
+    queryset = VideoProject.objects.all()
+    serializer_class = VideoProjectSerializer
+    lookup_field = "id"
+
+
+# Delete video
+class VideoDeleteView(generics.DestroyAPIView):
+    queryset = VideoProject.objects.all()
+    serializer_class = VideoProjectSerializer
+    lookup_field = "id"

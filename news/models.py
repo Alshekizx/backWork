@@ -352,3 +352,16 @@ class NewsletterHistory(models.Model):
 
     def __str__(self):
         return f"{self.subject} ({self.sent_at})"
+
+class VideoProject(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
+    project_name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
+    details = models.TextField(blank=True, null=True)
+    
+    video_link = models.URLField(max_length=1000)  # YouTube / Facebook link
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project_name} - {self.title}"
