@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from newsapi import settings
-from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource, CategoryPlacement
+from .models import Advertisement, NewsPost, Comment, CustomUser, AdminAccount, ContactUs, NewsLetterSubscription, NewsletterHistory,NewsCategory, NewsSource, CategoryPlacement, VideoProject
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from django.contrib.auth.hashers import make_password
