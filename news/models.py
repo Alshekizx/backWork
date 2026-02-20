@@ -352,16 +352,24 @@ class NewsletterHistory(models.Model):
 
     def __str__(self):
         return f"{self.subject} ({self.sent_at})"
+    
+
 
 class VideoProject(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
     project_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     details = models.TextField(blank=True, null=True)
-    
-    video_link = models.URLField(max_length=1000)  # YouTube / Facebook link
+    video_link = models.URLField()
+    video_id = models.CharField(max_length=50, blank=True)
+    thumbnail = models.URLField(blank=True)
+
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.project_name} - {self.title}"
+    def save(self, *args, **kwargs):
+        import re
+        match = re.search(r"(?:v=|youtu.be/|shorts/)([^&?/]+)", self.video_link)
+        if match:
+            self.video_id = match.group(1)
+            self.thumbnail = f"https://img.youtube.com/vi/{self.video_id}/hqdefault.jpg"
+
+        super().save(*args, **kwargs)
